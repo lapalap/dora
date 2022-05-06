@@ -1,19 +1,34 @@
-"""Example of code."""
 
+class Dora:
+    types = {}
 
-def hello(name: str) -> str:
-    """Just an greetings example.
+    def __class_getitem__(cls, key):
+        try:
+            W1, W2 = key
+        except ValueError:
+            raise Exception('ProductWeight[] takes exactly two arguments.')
 
-    Args:
-        name (str): Name to greet.
+        name = f'{ProductWeight.__name__}<{W1.__name__}, {W2.__name__}>'
 
-    Returns:
-        str: greeting message
+        try:
+            return cls.types[name]
+        except KeyError:
+            pass
 
-    Examples:
-        .. code:: python
+        new_type = type(name, (), {'__init__': cls.init})
+        new_type.W1 = W1
+        new_type.W2 = W2
+        new_type.zero = classmethod(cls.zero)
+        cls.types[name] = new_type
 
-            >>> hello("Roman")
-            'Hello Roman!'
-    """
-    return f"Hello {name}!"
+        return new_type
+
+    def __init__(self):
+        raise Exception('ProductWeight is a static class and cannot be instantiated.')
+
+    def init(self, value1, value2):
+        self.value1 = value1
+        self.value2 = value2
+
+    def zero(cls):
+        return cls(cls.W1.zero(), cls.W2.zero())

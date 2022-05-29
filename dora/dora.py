@@ -6,16 +6,17 @@ from torch_dreams.dreamer import dreamer
 
 from typing import Callable
 
-warnings.simplefilter('default')
+warnings.simplefilter("default")
 
-class Dora():
+
+class Dora:
     def __init__(
         self,
         model: nn.Module,
         layer: nn.Module,
-        storage_dir = '.dora/',
-        delete_if_storage_dir_exists = False,
-        device = None
+        storage_dir=".dora/",
+        delete_if_storage_dir_exists=False,
+        device=None,
     ):
         """Handles all stuff dora related. Would require a storage_dir where it would store the synthetic activatiion
         maximization signals (s-AMS) as images which would be fed into self.model to collect activations.
@@ -35,30 +36,27 @@ class Dora():
 
         self.model = model
         self.layer = layer
-        self.dreamer = dreamer(
-            model = self.model,
-            quiet =True,
-            device = device
-        )
+        self.dreamer = dreamer(model=self.model, quiet=True, device=device)
         self.storage_dir = storage_dir
 
         self.make_folder(
-            name = storage_dir,
-            delete_if_storage_dir_exists = delete_if_storage_dir_exists
+            name=storage_dir, delete_if_storage_dir_exists=delete_if_storage_dir_exists
         )
 
-    def make_folder(self, name, delete_if_storage_dir_exists = False):
+    def make_folder(self, name, delete_if_storage_dir_exists=False):
 
-        if name[-1] == '/':
+        if name[-1] == "/":
             name = name[:-1]
 
         folder_exists = os.path.exists(name)
 
         if folder_exists == True:
-            num_files = len(self.get_filenames_in_a_folder(folder = name))
+            num_files = len(self.get_filenames_in_a_folder(folder=name))
             print(num_files)
             if num_files > 0:
-                warnings.warn(f"Folder: {name} already exists and has {num_files} items ,if you want to delete it then set delete_if_storage_dir_exists = True")
+                warnings.warn(
+                    f"Folder: {name} already exists and has {num_files} items ,if you want to delete it then set delete_if_storage_dir_exists = True"
+                )
         else:
             os.mkdir(name)
 
@@ -66,19 +64,15 @@ class Dora():
         """
         returns the list of paths to all the files in a given folder
         """
-        
-        if folder[-1] == '/':
+
+        if folder[-1] == "/":
             folder = folder[:-1]
-            
-        files =  os.listdir(folder)
-        files = [f'{folder}/' + x for x in files]
+
+        files = os.listdir(folder)
+        files = [f"{folder}/" + x for x in files]
         return files
 
-    def run(
-        self,
-        progress: bool = False,
-        objective_fn: Callable = None
-    ):
+    def run(self, progress: bool = False, objective_fn: Callable = None):
         """Would generate s-AMS for each neuron inside self.layer based on the objective_fn.
 
         Args:
@@ -97,6 +91,3 @@ class Dora():
             NotImplementedError: _description_
         """
         raise NotImplementedError
-
-
-    

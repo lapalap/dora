@@ -1,27 +1,28 @@
-import dora
-import torchvision
+from dora import Dora
+from dora.objectives import ChannelObjective
 
-model = torchvision.models.resnet18(pretrained = True)
+import torchvision.models as models
+import torchvision.transforms as transforms
 
-explorer = dora.Dora(model)
+model = models.resnet18(pretrained=True).eval()
+my_transforms = transforms.Compose(
+    [
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ]
+)
 
-# getting layer names -- list of strings with names of layers
-name_list = explorer.get_layers_names()
-layer_name = name_list[-1]
+d = Dora(model=model, layer=model.layer4, image_transforms=my_transforms)
 
-# generate AMS (FVs)
+d.run(
+    neuron_idx=[i for i in range(512)],
+    objective_fn=ChannelObjective(),
+    width=224,
+    height=224,
+    iters=1,
+    progress=True,
+    save_results=True,
+    skip_if_exists=True,
+)
 
-ams = explorer.generate_ams(layer_name,
-                           FV_method,
-                           params,
-                           )
-
-# getting the embeddings
-embeddings = explorer.get_embeddings(layer_name,
-                                     ams)
-
-# show atlas ( dimentionaluity reduction)
-explorer.plot_atlas(embeddings)
-
-# finding outliers
-explorer.find_outliers(embeddings)
+print(d.results)

@@ -3,6 +3,7 @@ import torch
 import warnings
 import torch.nn as nn
 from tqdm import tqdm
+from PIL import Image
 from torch_dreams.dreamer import dreamer
 import torchvision.transforms as transforms
 
@@ -19,6 +20,7 @@ class Dora:
         self,
         model: nn.Module,
         layer: nn.Module,
+        image_transforms: Callable,
         storage_dir=".dora/",
         delete_if_storage_dir_exists=False,
         device=None,
@@ -41,6 +43,7 @@ class Dora:
 
         self.model = model
         self.layer = layer
+        self.image_transforms = image_transforms
         self.dreamer = dreamer(model=self.model, quiet=True, device=device)
 
         if storage_dir[-1] == "/":
@@ -127,6 +130,13 @@ class Dora:
                 print(
                     f"skippping neuron index:{idx} because it already exists here: {filename}"
                 )
+                image = Image.open(filename)
+
+                self.results[idx] = Result(
+                    s_ams=self.image_transforms(image).unsqueeze(0),
+                    image=image,
+                    encoding=None,
+                )
             else:
                 image_param = self.dreamer.render(
                     layers=[self.layer],
@@ -170,6 +180,18 @@ class Dora:
             y = self.model.forward(input_tensor)
 
             self.results[idx].encoding = hook.output
+
+    def run_outlier_detection(self, neuron_idx=None):
+        # if neuron_idx is None, iterate over all results
+        if neuron_idx is None:
+            neuron_idx = list(self.results.keys())
+
+        encodings = torch.cat([self.results[i].encoding for i in neuron_idx], dim=0)
+
+        ## @kiril you can do your outlier detection stuff here
+        print(
+            encodings.shape
+        )  ## torch.Size([5, 512, 7, 7]) for 5 neurons from resnet 18
 
     def show_results(self):
         """Generates a plotly plot from the results. Useful to see the outliers in a 2D space.

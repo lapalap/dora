@@ -163,6 +163,9 @@ class Dora:
                 if save_results is True:
                     image_param.save(filename=filename)
 
+        self.collect_encodings(neuron_idx=neuron_idx)
+        self.run_outlier_detection(neuron_idx=neuron_idx)
+
     def load_results_from_folder(self, folder):
         raise NotImplementedError
 

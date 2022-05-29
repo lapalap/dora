@@ -5,6 +5,9 @@
 ## ignore venv
 env-dora/
 
+## ignore dora dir
+.dora/
+
 ### OSX ###
 # General
 .DS_Store

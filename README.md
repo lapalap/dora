@@ -1,6 +1,6 @@
-<p align="center">
-  <img src="assets/images/logo.png" />
-</p>
+<div align="center">
+  <img src="./assets/images/logo.svg" />
+</div>
 
 # dora
 

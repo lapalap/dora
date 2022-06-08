@@ -11,6 +11,8 @@ from typing import Callable, Union
 from .objectives import ChannelObjective
 from .results import Result
 from .forward_hook import ForwardHook
+from .outlier_detection import UmapVisualizer
+from .reduction_methods import get_mean_along_last_2_dims
 
 warnings.simplefilter("default")
 
@@ -56,6 +58,8 @@ class Dora:
         )
 
         self.results = {}
+
+        self.umap = UmapVisualizer()
 
     def make_folder(self, name, delete_if_storage_dir_exists=False):
 
@@ -184,17 +188,23 @@ class Dora:
 
             self.results[idx].encoding = hook.output
 
-    def run_outlier_detection(self, neuron_idx=None):
+    def run_outlier_detection(
+        self,
+        neuron_idx=None,
+        activation_reduction_fn: Callable = get_mean_along_last_2_dims,
+    ):
         # if neuron_idx is None, iterate over all results
         if neuron_idx is None:
             neuron_idx = list(self.results.keys())
 
         encodings = torch.cat([self.results[i].encoding for i in neuron_idx], dim=0)
+        assert (
+            encodings.ndim == 4
+        ), "Expected activations to have 4 dimensions [N, C, *, *] but got {encodings.ndim}"
 
-        ## @kiril you can do your outlier detection stuff here
-        print(
-            encodings.shape
-        )  ## torch.Size([5, 512, 7, 7]) for 5 neurons from resnet 18
+        reduced_encodings = activation_reduction_fn(encodings)
+
+        result = self.umap.run(activations=reduced_encodings)
 
     def show_results(self):
         """Generates a plotly plot from the results. Useful to see the outliers in a 2D space.

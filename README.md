@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/images/logo.svg" width="400"/>
+  <img src="./assets/images/logo.svg" width="350"/>
 </div>
 
 <center><h1>DORA: Data-agnOstic Representation Analysis</h1></center>
@@ -20,23 +20,23 @@
 </div>
 
 <div align="left">
-<img src="./assets/images/About.svg" height="18"/>
+<img src="./assets/images/About.svg" height="24"/>
 </div>
 
 <div align="left">
-<img src="./assets/images/Installation.svg" height="18"/>
+<img src="./assets/images/Installation.svg" height="24"/>
 </div>
 
 <div align="left">
-<img src="./assets/images/License.svg" height="18"/>
+<img src="./assets/images/License.svg" height="24"/>
 </div>
 
 <div align="left">
-<img src="./assets/images/Contributing.svg" height="18"/>
+<img src="./assets/images/Contributing.svg" height="24"/>
 </div>
 
 <div align="left">
-<img src="./assets/images/Citation.svg" height="18"/>
+<img src="./assets/images/Citation.svg" height="24"/>
 </div>
 
 ## Very first steps

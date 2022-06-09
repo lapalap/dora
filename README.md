@@ -25,6 +25,11 @@
 <hr />
 
 <div align="left">
+<img src="./assets/images/Getting%20started.svg" height="32"/>
+</div>
+<hr />
+
+<div align="left">
 <img src="./assets/images/Installation.svg" height="32"/>
 </div>
 <hr />

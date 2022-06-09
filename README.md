@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="./assets/images/logo.svg" />
+  <img src="./assets/images/logo.svg" width="500" height="193"/>
 </div>
 
-# dora
+<center><h1>DORA: Data-agnOstic Representation Analysis</h1></center>
 
 <div align="center">
 
@@ -17,8 +17,26 @@
 [![License](https://img.shields.io/github/license/lapalap/dora)](https://github.com/lapalap/dora/blob/master/LICENSE)
 ![Coverage Report](assets/images/coverage.svg)
 
-Awesome `dora` is a Python cli/package created with https://github.com/TezRomacH/python-package-template
+</div>
 
+<div align="left">
+<img src="./assets/images/About.svg" width="101" height="14"/>
+</div>
+
+<div align="left">
+<img src="./assets/images/Installation.svg" width="101" height="14"/>
+</div>
+
+<div align="left">
+<img src="./assets/images/License.svg" width="101" height="14"/>
+</div>
+
+<div align="left">
+<img src="./assets/images/Contributing.svg" width="101" height="14"/>
+</div>
+
+<div align="left">
+<img src="./assets/images/Citation.svg" width="101" height="14"/>
 </div>
 
 ## Very first steps

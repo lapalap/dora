@@ -22,26 +22,43 @@
 <div align="left">
 <img src="./assets/images/About.svg" height="32"/>
 </div>
----------------------------------------
+<hr />
 
 <div align="left">
 <img src="./assets/images/Installation.svg" height="32"/>
 </div>
----------------------------------------
+<hr />
 <div align="left">
 <img src="./assets/images/Contributing.svg" height="32"/>
 </div>
----------------------------------------
+<hr />
 <div align="left">
 <img src="./assets/images/Citation.svg" height="32"/>
 </div>
----------------------------------------
+<hr />
+
+```bibtex
+@misc{dora,
+  author = {TU Berlin UMI-Lab},
+  title = {Awesome `dora` is a Python cli/package created with https://github.com/TezRomacH/python-package-template},
+  year = {2022},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/lapalap/dora}}
+}
+```
+
 <div align="left">
 <img src="./assets/images/License.svg" height="32"/>
 </div>
----------------------------------------
-## Very first steps
+<hr />
 
+[![License](https://img.shields.io/github/license/lapalap/dora)](https://github.com/lapalap/dora/blob/master/LICENSE)
+
+This project is licensed under the terms of the `GNU GPL v3.0` license. See [LICENSE](https://github.com/lapalap/dora/blob/master/LICENSE) for more details.
+
+
+<hr />
 ### Initialize your code
 
 1. Initialize `git` inside your repo:
@@ -392,25 +409,6 @@ We use [`Release Drafter`](https://github.com/marketplace/actions/release-drafte
 You can update it in [`release-drafter.yml`](https://github.com/lapalap/dora/blob/master/.github/release-drafter.yml).
 
 GitHub creates the `bug`, `enhancement`, and `documentation` labels for you. Dependabot creates the `dependencies` label. Create the remaining labels on the Issues tab of your GitHub repository, when you need them.
-
-## 🛡 License
-
-[![License](https://img.shields.io/github/license/lapalap/dora)](https://github.com/lapalap/dora/blob/master/LICENSE)
-
-This project is licensed under the terms of the `GNU GPL v3.0` license. See [LICENSE](https://github.com/lapalap/dora/blob/master/LICENSE) for more details.
-
-## 📃 Citation
-
-```bibtex
-@misc{dora,
-  author = {TU Berlin UMI-Lab},
-  title = {Awesome `dora` is a Python cli/package created with https://github.com/TezRomacH/python-package-template},
-  year = {2022},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/lapalap/dora}}
-}
-```
 
 ## Credits [![🚀 Your next Python package needs a bleeding-edge project structure.](https://img.shields.io/badge/python--package--template-%F0%9F%9A%80-brightgreen)](https://github.com/TezRomacH/python-package-template)
 

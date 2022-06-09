@@ -20,25 +20,26 @@
 </div>
 
 <div align="left">
-<img src="./assets/images/About.svg" height="24"/>
+<img src="./assets/images/About.svg" height="32"/>
 </div>
+---------------------------------------
 
 <div align="left">
-<img src="./assets/images/Installation.svg" height="24"/>
+<img src="./assets/images/Installation.svg" height="32"/>
 </div>
-
+---------------------------------------
 <div align="left">
-<img src="./assets/images/License.svg" height="24"/>
+<img src="./assets/images/Contributing.svg" height="32"/>
 </div>
-
+---------------------------------------
 <div align="left">
-<img src="./assets/images/Contributing.svg" height="24"/>
+<img src="./assets/images/Citation.svg" height="32"/>
 </div>
-
+---------------------------------------
 <div align="left">
-<img src="./assets/images/Citation.svg" height="24"/>
+<img src="./assets/images/License.svg" height="32"/>
 </div>
-
+---------------------------------------
 ## Very first steps
 
 ### Initialize your code

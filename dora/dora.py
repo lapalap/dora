@@ -138,6 +138,7 @@ class Dora:
             f"Experiment name: {experiment_name}"
         )
         experiment_folder = sAMS_folder + '/' + experiment_name
+        self.results[experiment_name] = {}
 
 
         #TODO: check if experiment folder exists (well, it shouldn't, but still)
@@ -168,7 +169,8 @@ class Dora:
                 )
                 image = Image.open(filename)
 
-                self.results[idx] = Result(
+                # TODO: maybe not load all s-AMS to the memory -- only save them, and load?
+                self.results[experiment_name][idx] = Result(
                     s_ams=self.image_transforms(image).unsqueeze(0),
                     image=image,
                     encoding=None,
@@ -190,7 +192,7 @@ class Dora:
                     grad_clip=grad_clip,
                 )
 
-                self.results[idx] = Result(
+                self.results[experiment_name][idx] = Result(
                     s_ams=image_param.to_chw_tensor().unsqueeze(0),
                     image=transforms.ToPILImage()(image_param.to_chw_tensor()),
                     encoding=None,
@@ -199,37 +201,43 @@ class Dora:
                 if save_results is True:
                     image_param.save(filename=filename)
 
-        self.collect_encodings(neuron_idx=neuron_idx)
-        self.run_outlier_detection(neuron_idx=neuron_idx)
+        # TODO: add logs to the experiment folder -- like hyperparameters information and etc..
+
+        # self.collect_encodings(neuron_idx=neuron_idx)
+        # self.run_outlier_detection(neuron_idx=neuron_idx)
 
     def load_results_from_folder(self, folder):
         raise NotImplementedError
 
     @torch.no_grad()
-    def collect_encodings(self, neuron_idx=None):
+    def collect_encodings(self,
+                          layer,
+                          experiment_name,
+                          neuron_idx=None):
 
         # if neuron_idx is None, iterate over all results
         if neuron_idx is None:
-            neuron_idx = list(self.results.keys())
+            neuron_idx = list(self.results[experiment_name].keys())
 
-        hook = ForwardHook(module=self.layer)
+        hook = ForwardHook(module=layer)
 
         for idx in tqdm(neuron_idx, desc="Collecting encodings"):
-            input_tensor = self.results[idx].s_ams
+            input_tensor = self.results[experiment_name][idx].s_ams
             y = self.model.forward(input_tensor)
 
-            self.results[idx].encoding = hook.output
+            self.results[experiment_name][idx].encoding = hook.output
 
     def run_outlier_detection(
         self,
+        experiment_name,
         neuron_idx=None,
         activation_reduction_fn: Callable = get_mean_along_last_2_dims,
     ):
         # if neuron_idx is None, iterate over all results
         if neuron_idx is None:
-            neuron_idx = list(self.results.keys())
+            neuron_idx = list(self.results[experiment_name].keys())
 
-        encodings = torch.cat([self.results[i].encoding for i in neuron_idx], dim=0)
+        encodings = torch.cat([self.results[experiment_name][i].encoding for i in neuron_idx], dim=0)
         assert (
             encodings.ndim == 4
         ), "Expected activations to have 4 dimensions [N, C, *, *] but got {encodings.ndim}"

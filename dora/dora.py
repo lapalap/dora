@@ -108,7 +108,7 @@ class Dora:
         save_results=True,
         skip_if_exists=True,
         include_logs = True,
-        experiment_name: None,
+        experiment_name = None,
     ):
         """Would generate s-AMS for each neuron inside self.layer based on the objective_fn.
 

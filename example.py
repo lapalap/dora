@@ -25,5 +25,10 @@ d.generate_signals(
     save_results=True,
     skip_if_exists=True,
     experiment_name='model.avgpool',
-
 )
+
+d.collect_encodings(layer = model.avgpool,
+                    experiment_name='model.avgpool',
+                    )
+
+print(d.results)

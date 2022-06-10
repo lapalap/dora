@@ -1,6 +1,7 @@
 import os
 import torch
 import warnings
+import time
 import torch.nn as nn
 from tqdm import tqdm
 from PIL import Image
@@ -21,14 +22,13 @@ class Dora:
     def __init__(
         self,
         model: nn.Module,
-        layer: nn.Module,
         image_transforms: Callable,
         storage_dir=".dora/",
         delete_if_storage_dir_exists=False,
         device=None,
     ):
-        """Handles all stuff dora related. Would require a storage_dir where it would store the synthetic activatiion
-        maximization signals (s-AMS) as images which would be fed into self.model to collect activations.
+        """Handles all stuff dora related. Would require a storage_dir where it would store the synthetic Activatiion
+        Maximization Signals (s-AMS) as images which would be fed into self.model to collect activations.
 
         Note: It is highly recommended that you run DORA on a GPU and not on a CPU for fast performance.
 
@@ -44,7 +44,6 @@ class Dora:
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.model = model
-        self.layer = layer
         self.image_transforms = image_transforms
         self.dreamer = dreamer(model=self.model, quiet=True, device=device)
 
@@ -53,15 +52,16 @@ class Dora:
 
         self.storage_dir = storage_dir
 
-        self.make_folder(
-            name=storage_dir, delete_if_storage_dir_exists=delete_if_storage_dir_exists
+        self.__make_folder(
+            name=storage_dir,
+            delete_if_storage_dir_exists=delete_if_storage_dir_exists
         )
 
         self.results = {}
 
         self.umap = UmapVisualizer()
 
-    def make_folder(self, name, delete_if_storage_dir_exists=False):
+    def __make_folder(self, name, delete_if_storage_dir_exists=False):
 
         if name[-1] == "/":
             name = name[:-1]
@@ -69,7 +69,7 @@ class Dora:
         folder_exists = os.path.exists(name)
 
         if folder_exists == True:
-            num_files = len(self.get_filenames_in_a_folder(folder=name))
+            num_files = len(self.__get_filenames_in_a_folder(folder=name))
             print(num_files)
             if num_files > 0:
                 warnings.warn(
@@ -78,7 +78,8 @@ class Dora:
         else:
             os.mkdir(name)
 
-    def get_filenames_in_a_folder(self, folder: str):
+
+    def __get_filenames_in_a_folder(self, folder: str):
         """
         returns the list of paths to all the files in a given folder
         """
@@ -87,8 +88,9 @@ class Dora:
         files = [f"{folder}/" + x for x in files]
         return files
 
-    def run(
+    def generate_signals(
         self,
+        layer: nn.Module,
         progress: bool = False,
         objective_fn: Callable = None,
         neuron_idx: Union[list, int] = None,
@@ -105,6 +107,8 @@ class Dora:
         grad_clip=1.0,
         save_results=True,
         skip_if_exists=True,
+        include_logs = True,
+        experiment_name: None,
     ):
         """Would generate s-AMS for each neuron inside self.layer based on the objective_fn.
 
@@ -112,6 +116,34 @@ class Dora:
             progress (bool, optional): Set to True if you want to see tqdm progress. Defaults to False.
             objective_fn (Callable, optional): The objective function based on which the s-AMS would be generated. See https://github.com/Mayukhdeb/torch-dreams#visualizing-individual-channels-with-custom_func for more info. Defaults to None.
         """
+
+        #time when execution started
+        starting_time = time.time()
+        sAMS_folder = self.storage_dir + '/sAMS'
+
+        #creating a subfolder for sAMS (if not exists)
+        folder_exists = os.path.exists(sAMS_folder)
+        if folder_exists == False:
+            os.mkdir(sAMS_folder)
+            print(
+                f"Subfolder for sAMS created at {sAMS_folder}"
+            )
+        else:
+            print(
+                f"Using existing sAMS folder at {sAMS_folder}"
+            )
+        #start generation
+        experiment_name = str(starting_time) if experiment_name is None
+        print(
+            f"Experiment name: {experiment_name}"
+        )
+        experiment_folder = sAMS_folder + '/' + experiment_name
+
+
+        #TODO: check if experiment folder exists (well, it shouldn't, but still)
+        experiment_folder_exists = os.path.exists(experiment_folder)
+        os.mkdir(experiment_folder)
+
         if isinstance(neuron_idx, int):
             neuron_idx = [neuron_idx]
         else:
@@ -121,7 +153,7 @@ class Dora:
 
         for idx in tqdm(neuron_idx, disable=not (progress), desc="Generating s-AMS"):
 
-            filename = self.storage_dir + "/" + f"{idx}.jpg"
+            filename = experiment_folder + "/" + f"{idx}.jpg"
 
             if isinstance(objective_fn, ChannelObjective):
                 objective_fn.channel_number = idx
@@ -143,7 +175,7 @@ class Dora:
                 )
             else:
                 image_param = self.dreamer.render(
-                    layers=[self.layer],
+                    layers=[layer],
                     width=width,
                     height=height,
                     iters=iters,

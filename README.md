@@ -2,8 +2,9 @@
   <img src="./assets/images/logo.svg" width="350"/>
 </div>
 
-<center><h1>DORA: Data-agnOstic Representation Analysis</h1></center>
-
+<div align="center"><h1>DORA: Data-agnOstic Representation Analysis</h1>
+<h5>A toolkit to explore Representation Spaces of Deep Neural Networks</h5>
+<h6>PyTorch version</h6></div>
 <div align="center">
 
 [![Build status](https://github.com/lapalap/dora/workflows/build/badge.svg?branch=master&event=push)](https://github.com/lapalap/dora/actions?query=workflow%3Abuild)
@@ -43,13 +44,15 @@
 <hr />
 
 ```bibtex
-@misc{dora,
-  author = {TU Berlin UMI-Lab},
-  title = {Awesome `dora` is a Python cli/package created with https://github.com/TezRomacH/python-package-template},
+@misc{https://doi.org/10.48550/arxiv.2206.04530,
+  doi = {10.48550/ARXIV.2206.04530},
+  url = {https://arxiv.org/abs/2206.04530},
+  author = {Bykov, Kirill and Deb, Mayukh and Grinwald, Dennis and Müller, Klaus-Robert and Höhne, Marina M. -C.},
+  keywords = {Machine Learning (cs.LG), Artificial Intelligence (cs.AI), Computer Vision and Pattern Recognition (cs.CV), Machine Learning (stat.ML), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  title = {DORA: Exploring outlier representations in Deep Neural Networks},
+  publisher = {arXiv},
   year = {2022},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/lapalap/dora}}
+  copyright = {arXiv.org perpetual, non-exclusive license}
 }
 ```
 
@@ -63,358 +66,490 @@
 This project is licensed under the terms of the `GNU GPL v3.0` license. See [LICENSE](https://github.com/lapalap/dora/blob/master/LICENSE) for more details.
 
 
-<hr />
-### Initialize your code
+[comment]: <> (### Initialize your code)
 
-1. Initialize `git` inside your repo:
+[comment]: <> (1. Initialize `git` inside your repo:)
 
-```bash
-cd dora && git init
-```
+[comment]: <> (```bash)
 
-2. If you don't have `Poetry` installed run:
+[comment]: <> (cd dora && git init)
 
-```bash
-make poetry-download
-```
+[comment]: <> (```)
 
-3. Initialize poetry and install `pre-commit` hooks:
+[comment]: <> (2. If you don't have `Poetry` installed run:)
 
-```bash
-make install
-make pre-commit-install
-```
+[comment]: <> (```bash)
 
-4. Run the codestyle:
+[comment]: <> (make poetry-download)
 
-```bash
-make codestyle
-```
+[comment]: <> (```)
 
-5. Upload initial code to GitHub:
+[comment]: <> (3. Initialize poetry and install `pre-commit` hooks:)
 
-```bash
-git add .
-git commit -m ":tada: Initial commit"
-git branch -M main
-git remote add origin https://github.com/lapalap/dora.git
-git push -u origin main
-```
+[comment]: <> (```bash)
 
-### Set up bots
+[comment]: <> (make install)
 
-- Set up [Dependabot](https://docs.github.com/en/github/administering-a-repository/enabling-and-disabling-version-updates#enabling-github-dependabot-version-updates) to ensure you have the latest dependencies.
-- Set up [Stale bot](https://github.com/apps/stale) for automatic issue closing.
+[comment]: <> (make pre-commit-install)
 
-### Poetry
+[comment]: <> (```)
 
-Want to know more about Poetry? Check [its documentation](https://python-poetry.org/docs/).
+[comment]: <> (4. Run the codestyle:)
 
-<details>
-<summary>Details about Poetry</summary>
-<p>
+[comment]: <> (```bash)
 
-Poetry's [commands](https://python-poetry.org/docs/cli/#commands) are very intuitive and easy to learn, like:
+[comment]: <> (make codestyle)
 
-- `poetry add numpy@latest`
-- `poetry run pytest`
-- `poetry publish --build`
+[comment]: <> (```)
 
-etc
-</p>
-</details>
+[comment]: <> (5. Upload initial code to GitHub:)
 
-### Building and releasing your package
+[comment]: <> (```bash)
 
-Building a new version of the application contains steps:
+[comment]: <> (git add .)
 
-- Bump the version of your package `poetry version <version>`. You can pass the new version explicitly, or a rule such as `major`, `minor`, or `patch`. For more details, refer to the [Semantic Versions](https://semver.org/) standard.
-- Make a commit to `GitHub`.
-- Create a `GitHub release`.
-- And... publish 🙂 `poetry publish --build`
+[comment]: <> (git commit -m ":tada: Initial commit")
 
-## 🎯 What's next
+[comment]: <> (git branch -M main)
 
-Well, that's up to you 💪🏻. I can only recommend the packages and articles that helped me.
+[comment]: <> (git remote add origin https://github.com/lapalap/dora.git)
 
-- [`Typer`](https://github.com/tiangolo/typer) is great for creating CLI applications.
-- [`Rich`](https://github.com/willmcgugan/rich) makes it easy to add beautiful formatting in the terminal.
-- [`Pydantic`](https://github.com/samuelcolvin/pydantic/) – data validation and settings management using Python type hinting.
-- [`Loguru`](https://github.com/Delgan/loguru) makes logging (stupidly) simple.
-- [`tqdm`](https://github.com/tqdm/tqdm) – fast, extensible progress bar for Python and CLI.
-- [`IceCream`](https://github.com/gruns/icecream) is a little library for sweet and creamy debugging.
-- [`orjson`](https://github.com/ijl/orjson) – ultra fast JSON parsing library.
-- [`Returns`](https://github.com/dry-python/returns) makes you function's output meaningful, typed, and safe!
-- [`Hydra`](https://github.com/facebookresearch/hydra) is a framework for elegantly configuring complex applications.
-- [`FastAPI`](https://github.com/tiangolo/fastapi) is a type-driven asynchronous web framework.
+[comment]: <> (git push -u origin main)
 
-Articles:
+[comment]: <> (```)
 
-- [Open Source Guides](https://opensource.guide/).
-- [A handy guide to financial support for open source](https://github.com/nayafia/lemonade-stand)
-- [GitHub Actions Documentation](https://help.github.com/en/actions).
-- Maybe you would like to add [gitmoji](https://gitmoji.carloscuesta.me/) to commit names. This is really funny. 😄
+[comment]: <> (### Set up bots)
 
-## 🚀 Features
+[comment]: <> (- Set up [Dependabot]&#40;https://docs.github.com/en/github/administering-a-repository/enabling-and-disabling-version-updates#enabling-github-dependabot-version-updates&#41; to ensure you have the latest dependencies.)
 
-### Development features
+[comment]: <> (- Set up [Stale bot]&#40;https://github.com/apps/stale&#41; for automatic issue closing.)
 
-- Supports for `Python 3.7` and higher.
-- [`Poetry`](https://python-poetry.org/) as the dependencies manager. See configuration in [`pyproject.toml`](https://github.com/lapalap/dora/blob/master/pyproject.toml) and [`setup.cfg`](https://github.com/lapalap/dora/blob/master/setup.cfg).
-- Automatic codestyle with [`black`](https://github.com/psf/black), [`isort`](https://github.com/timothycrosley/isort) and [`pyupgrade`](https://github.com/asottile/pyupgrade).
-- Ready-to-use [`pre-commit`](https://pre-commit.com/) hooks with code-formatting.
-- Type checks with [`mypy`](https://mypy.readthedocs.io); docstring checks with [`darglint`](https://github.com/terrencepreilly/darglint); security checks with [`safety`](https://github.com/pyupio/safety) and [`bandit`](https://github.com/PyCQA/bandit)
-- Testing with [`pytest`](https://docs.pytest.org/en/latest/).
-- Ready-to-use [`.editorconfig`](https://github.com/lapalap/dora/blob/master/.editorconfig), [`.dockerignore`](https://github.com/lapalap/dora/blob/master/.dockerignore), and [`.gitignore`](https://github.com/lapalap/dora/blob/master/.gitignore). You don't have to worry about those things.
+[comment]: <> (### Poetry)
 
-### Deployment features
+[comment]: <> (Want to know more about Poetry? Check [its documentation]&#40;https://python-poetry.org/docs/&#41;.)
 
-- `GitHub` integration: issue and pr templates.
-- `Github Actions` with predefined [build workflow](https://github.com/lapalap/dora/blob/master/.github/workflows/build.yml) as the default CI/CD.
-- Everything is already set up for security checks, codestyle checks, code formatting, testing, linting, docker builds, etc with [`Makefile`](https://github.com/lapalap/dora/blob/master/Makefile#L89). More details in [makefile-usage](#makefile-usage).
-- [Dockerfile](https://github.com/lapalap/dora/blob/master/docker/Dockerfile) for your package.
-- Always up-to-date dependencies with [`@dependabot`](https://dependabot.com/). You will only [enable it](https://docs.github.com/en/github/administering-a-repository/enabling-and-disabling-version-updates#enabling-github-dependabot-version-updates).
-- Automatic drafts of new releases with [`Release Drafter`](https://github.com/marketplace/actions/release-drafter). You may see the list of labels in [`release-drafter.yml`](https://github.com/lapalap/dora/blob/master/.github/release-drafter.yml). Works perfectly with [Semantic Versions](https://semver.org/) specification.
+[comment]: <> (<details>)
 
-### Open source community features
+[comment]: <> (<summary>Details about Poetry</summary>)
 
-- Ready-to-use [Pull Requests templates](https://github.com/lapalap/dora/blob/master/.github/PULL_REQUEST_TEMPLATE.md) and several [Issue templates](https://github.com/lapalap/dora/tree/master/.github/ISSUE_TEMPLATE).
-- Files such as: `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md` are generated automatically.
-- [`Stale bot`](https://github.com/apps/stale) that closes abandoned issues after a period of inactivity. (You will only [need to setup free plan](https://github.com/marketplace/stale)). Configuration is [here](https://github.com/lapalap/dora/blob/master/.github/.stale.yml).
-- [Semantic Versions](https://semver.org/) specification with [`Release Drafter`](https://github.com/marketplace/actions/release-drafter).
+[comment]: <> (<p>)
 
-## Installation
+[comment]: <> (Poetry's [commands]&#40;https://python-poetry.org/docs/cli/#commands&#41; are very intuitive and easy to learn, like:)
 
-```bash
-pip install -U dora
-```
+[comment]: <> (- `poetry add numpy@latest`)
 
-or install with `Poetry`
+[comment]: <> (- `poetry run pytest`)
 
-```bash
-poetry add dora
-```
+[comment]: <> (- `poetry publish --build`)
 
+[comment]: <> (etc)
 
+[comment]: <> (</p>)
 
-### Makefile usage
+[comment]: <> (</details>)
 
-[`Makefile`](https://github.com/lapalap/dora/blob/master/Makefile) contains a lot of functions for faster development.
+[comment]: <> (### Building and releasing your package)
 
-<details>
-<summary>1. Download and remove Poetry</summary>
-<p>
+[comment]: <> (Building a new version of the application contains steps:)
 
-To download and install Poetry run:
+[comment]: <> (- Bump the version of your package `poetry version <version>`. You can pass the new version explicitly, or a rule such as `major`, `minor`, or `patch`. For more details, refer to the [Semantic Versions]&#40;https://semver.org/&#41; standard.)
 
-```bash
-make poetry-download
-```
+[comment]: <> (- Make a commit to `GitHub`.)
 
-To uninstall
+[comment]: <> (- Create a `GitHub release`.)
 
-```bash
-make poetry-remove
-```
+[comment]: <> (- And... publish 🙂 `poetry publish --build`)
 
-</p>
-</details>
+[comment]: <> (## 🎯 What's next)
 
-<details>
-<summary>2. Install all dependencies and pre-commit hooks</summary>
-<p>
+[comment]: <> (Well, that's up to you 💪🏻. I can only recommend the packages and articles that helped me.)
 
-Install requirements:
+[comment]: <> (- [`Typer`]&#40;https://github.com/tiangolo/typer&#41; is great for creating CLI applications.)
 
-```bash
-make install
-```
+[comment]: <> (- [`Rich`]&#40;https://github.com/willmcgugan/rich&#41; makes it easy to add beautiful formatting in the terminal.)
 
-Pre-commit hooks coulb be installed after `git init` via
+[comment]: <> (- [`Pydantic`]&#40;https://github.com/samuelcolvin/pydantic/&#41; – data validation and settings management using Python type hinting.)
 
-```bash
-make pre-commit-install
-```
+[comment]: <> (- [`Loguru`]&#40;https://github.com/Delgan/loguru&#41; makes logging &#40;stupidly&#41; simple.)
 
-</p>
-</details>
+[comment]: <> (- [`tqdm`]&#40;https://github.com/tqdm/tqdm&#41; – fast, extensible progress bar for Python and CLI.)
 
-<details>
-<summary>3. Codestyle</summary>
-<p>
+[comment]: <> (- [`IceCream`]&#40;https://github.com/gruns/icecream&#41; is a little library for sweet and creamy debugging.)
 
-Automatic formatting uses `pyupgrade`, `isort` and `black`.
+[comment]: <> (- [`orjson`]&#40;https://github.com/ijl/orjson&#41; – ultra fast JSON parsing library.)
 
-```bash
-make codestyle
+[comment]: <> (- [`Returns`]&#40;https://github.com/dry-python/returns&#41; makes you function's output meaningful, typed, and safe!)
 
-# or use synonym
-make formatting
-```
+[comment]: <> (- [`Hydra`]&#40;https://github.com/facebookresearch/hydra&#41; is a framework for elegantly configuring complex applications.)
 
-Codestyle checks only, without rewriting files:
+[comment]: <> (- [`FastAPI`]&#40;https://github.com/tiangolo/fastapi&#41; is a type-driven asynchronous web framework.)
 
-```bash
-make check-codestyle
-```
+[comment]: <> (Articles:)
 
-> Note: `check-codestyle` uses `isort`, `black` and `darglint` library
+[comment]: <> (- [Open Source Guides]&#40;https://opensource.guide/&#41;.)
 
-Update all dev libraries to the latest version using one comand
+[comment]: <> (- [A handy guide to financial support for open source]&#40;https://github.com/nayafia/lemonade-stand&#41;)
 
-```bash
-make update-dev-deps
-```
+[comment]: <> (- [GitHub Actions Documentation]&#40;https://help.github.com/en/actions&#41;.)
 
-<details>
-<summary>4. Code security</summary>
-<p>
+[comment]: <> (- Maybe you would like to add [gitmoji]&#40;https://gitmoji.carloscuesta.me/&#41; to commit names. This is really funny. 😄)
 
-```bash
-make check-safety
-```
+[comment]: <> (## 🚀 Features)
 
-This command launches `Poetry` integrity checks as well as identifies security issues with `Safety` and `Bandit`.
+[comment]: <> (### Development features)
 
-```bash
-make check-safety
-```
+[comment]: <> (- Supports for `Python 3.7` and higher.)
 
-</p>
-</details>
+[comment]: <> (- [`Poetry`]&#40;https://python-poetry.org/&#41; as the dependencies manager. See configuration in [`pyproject.toml`]&#40;https://github.com/lapalap/dora/blob/master/pyproject.toml&#41; and [`setup.cfg`]&#40;https://github.com/lapalap/dora/blob/master/setup.cfg&#41;.)
 
-</p>
-</details>
+[comment]: <> (- Automatic codestyle with [`black`]&#40;https://github.com/psf/black&#41;, [`isort`]&#40;https://github.com/timothycrosley/isort&#41; and [`pyupgrade`]&#40;https://github.com/asottile/pyupgrade&#41;.)
 
-<details>
-<summary>5. Type checks</summary>
-<p>
+[comment]: <> (- Ready-to-use [`pre-commit`]&#40;https://pre-commit.com/&#41; hooks with code-formatting.)
 
-Run `mypy` static type checker
+[comment]: <> (- Type checks with [`mypy`]&#40;https://mypy.readthedocs.io&#41;; docstring checks with [`darglint`]&#40;https://github.com/terrencepreilly/darglint&#41;; security checks with [`safety`]&#40;https://github.com/pyupio/safety&#41; and [`bandit`]&#40;https://github.com/PyCQA/bandit&#41;)
 
-```bash
-make mypy
-```
+[comment]: <> (- Testing with [`pytest`]&#40;https://docs.pytest.org/en/latest/&#41;.)
 
-</p>
-</details>
+[comment]: <> (- Ready-to-use [`.editorconfig`]&#40;https://github.com/lapalap/dora/blob/master/.editorconfig&#41;, [`.dockerignore`]&#40;https://github.com/lapalap/dora/blob/master/.dockerignore&#41;, and [`.gitignore`]&#40;https://github.com/lapalap/dora/blob/master/.gitignore&#41;. You don't have to worry about those things.)
 
-<details>
-<summary>6. Tests with coverage badges</summary>
-<p>
+[comment]: <> (### Deployment features)
 
-Run `pytest`
+[comment]: <> (- `GitHub` integration: issue and pr templates.)
 
-```bash
-make test
-```
+[comment]: <> (- `Github Actions` with predefined [build workflow]&#40;https://github.com/lapalap/dora/blob/master/.github/workflows/build.yml&#41; as the default CI/CD.)
 
-</p>
-</details>
+[comment]: <> (- Everything is already set up for security checks, codestyle checks, code formatting, testing, linting, docker builds, etc with [`Makefile`]&#40;https://github.com/lapalap/dora/blob/master/Makefile#L89&#41;. More details in [makefile-usage]&#40;#makefile-usage&#41;.)
 
-<details>
-<summary>7. All linters</summary>
-<p>
+[comment]: <> (- [Dockerfile]&#40;https://github.com/lapalap/dora/blob/master/docker/Dockerfile&#41; for your package.)
 
-Of course there is a command to ~~rule~~ run all linters in one:
+[comment]: <> (- Always up-to-date dependencies with [`@dependabot`]&#40;https://dependabot.com/&#41;. You will only [enable it]&#40;https://docs.github.com/en/github/administering-a-repository/enabling-and-disabling-version-updates#enabling-github-dependabot-version-updates&#41;.)
 
-```bash
-make lint
-```
+[comment]: <> (- Automatic drafts of new releases with [`Release Drafter`]&#40;https://github.com/marketplace/actions/release-drafter&#41;. You may see the list of labels in [`release-drafter.yml`]&#40;https://github.com/lapalap/dora/blob/master/.github/release-drafter.yml&#41;. Works perfectly with [Semantic Versions]&#40;https://semver.org/&#41; specification.)
 
-the same as:
+[comment]: <> (### Open source community features)
 
-```bash
-make test && make check-codestyle && make mypy && make check-safety
-```
+[comment]: <> (- Ready-to-use [Pull Requests templates]&#40;https://github.com/lapalap/dora/blob/master/.github/PULL_REQUEST_TEMPLATE.md&#41; and several [Issue templates]&#40;https://github.com/lapalap/dora/tree/master/.github/ISSUE_TEMPLATE&#41;.)
 
-</p>
-</details>
+[comment]: <> (- Files such as: `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md` are generated automatically.)
 
-<details>
-<summary>8. Docker</summary>
-<p>
+[comment]: <> (- [`Stale bot`]&#40;https://github.com/apps/stale&#41; that closes abandoned issues after a period of inactivity. &#40;You will only [need to setup free plan]&#40;https://github.com/marketplace/stale&#41;&#41;. Configuration is [here]&#40;https://github.com/lapalap/dora/blob/master/.github/.stale.yml&#41;.)
 
-```bash
-make docker-build
-```
+[comment]: <> (- [Semantic Versions]&#40;https://semver.org/&#41; specification with [`Release Drafter`]&#40;https://github.com/marketplace/actions/release-drafter&#41;.)
 
-which is equivalent to:
+[comment]: <> (## Installation)
 
-```bash
-make docker-build VERSION=latest
-```
+[comment]: <> (```bash)
 
-Remove docker image with
+[comment]: <> (pip install -U dora)
 
-```bash
-make docker-remove
-```
+[comment]: <> (```)
 
-More information [about docker](https://github.com/lapalap/dora/tree/master/docker).
+[comment]: <> (or install with `Poetry`)
 
-</p>
-</details>
+[comment]: <> (```bash)
 
-<details>
-<summary>9. Cleanup</summary>
-<p>
-Delete pycache files
+[comment]: <> (poetry add dora)
 
-```bash
-make pycache-remove
-```
+[comment]: <> (```)
 
-Remove package build
 
-```bash
-make build-remove
-```
 
-Delete .DS_STORE files
+[comment]: <> (### Makefile usage)
 
-```bash
-make dsstore-remove
-```
+[comment]: <> ([`Makefile`]&#40;https://github.com/lapalap/dora/blob/master/Makefile&#41; contains a lot of functions for faster development.)
 
-Remove .mypycache
+[comment]: <> (<details>)
 
-```bash
-make mypycache-remove
-```
+[comment]: <> (<summary>1. Download and remove Poetry</summary>)
 
-Or to remove all above run:
+[comment]: <> (<p>)
 
-```bash
-make cleanup
-```
+[comment]: <> (To download and install Poetry run:)
 
-</p>
-</details>
+[comment]: <> (```bash)
 
-## 📈 Releases
+[comment]: <> (make poetry-download)
 
-You can see the list of available releases on the [GitHub Releases](https://github.com/lapalap/dora/releases) page.
+[comment]: <> (```)
 
-We follow [Semantic Versions](https://semver.org/) specification.
+[comment]: <> (To uninstall)
 
-We use [`Release Drafter`](https://github.com/marketplace/actions/release-drafter). As pull requests are merged, a draft release is kept up-to-date listing the changes, ready to publish when you’re ready. With the categories option, you can categorize pull requests in release notes using labels.
+[comment]: <> (```bash)
 
-### List of labels and corresponding titles
+[comment]: <> (make poetry-remove)
 
-|               **Label**               |  **Title in Releases**  |
-| :-----------------------------------: | :---------------------: |
-|       `enhancement`, `feature`        |       🚀 Features       |
-| `bug`, `refactoring`, `bugfix`, `fix` | 🔧 Fixes & Refactoring  |
-|       `build`, `ci`, `testing`        | 📦 Build System & CI/CD |
-|              `breaking`               |   💥 Breaking Changes   |
-|            `documentation`            |    📝 Documentation     |
-|            `dependencies`             | ⬆️ Dependencies updates |
+[comment]: <> (```)
 
-You can update it in [`release-drafter.yml`](https://github.com/lapalap/dora/blob/master/.github/release-drafter.yml).
+[comment]: <> (</p>)
 
-GitHub creates the `bug`, `enhancement`, and `documentation` labels for you. Dependabot creates the `dependencies` label. Create the remaining labels on the Issues tab of your GitHub repository, when you need them.
+[comment]: <> (</details>)
 
-## Credits [![🚀 Your next Python package needs a bleeding-edge project structure.](https://img.shields.io/badge/python--package--template-%F0%9F%9A%80-brightgreen)](https://github.com/TezRomacH/python-package-template)
+[comment]: <> (<details>)
 
-This project was generated with [`python-package-template`](https://github.com/TezRomacH/python-package-template)
+[comment]: <> (<summary>2. Install all dependencies and pre-commit hooks</summary>)
+
+[comment]: <> (<p>)
+
+[comment]: <> (Install requirements:)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make install)
+
+[comment]: <> (```)
+
+[comment]: <> (Pre-commit hooks coulb be installed after `git init` via)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make pre-commit-install)
+
+[comment]: <> (```)
+
+[comment]: <> (</p>)
+
+[comment]: <> (</details>)
+
+[comment]: <> (<details>)
+
+[comment]: <> (<summary>3. Codestyle</summary>)
+
+[comment]: <> (<p>)
+
+[comment]: <> (Automatic formatting uses `pyupgrade`, `isort` and `black`.)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make codestyle)
+
+[comment]: <> (# or use synonym)
+
+[comment]: <> (make formatting)
+
+[comment]: <> (```)
+
+[comment]: <> (Codestyle checks only, without rewriting files:)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make check-codestyle)
+
+[comment]: <> (```)
+
+[comment]: <> (> Note: `check-codestyle` uses `isort`, `black` and `darglint` library)
+
+[comment]: <> (Update all dev libraries to the latest version using one comand)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make update-dev-deps)
+
+[comment]: <> (```)
+
+[comment]: <> (<details>)
+
+[comment]: <> (<summary>4. Code security</summary>)
+
+[comment]: <> (<p>)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make check-safety)
+
+[comment]: <> (```)
+
+[comment]: <> (This command launches `Poetry` integrity checks as well as identifies security issues with `Safety` and `Bandit`.)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make check-safety)
+
+[comment]: <> (```)
+
+[comment]: <> (</p>)
+
+[comment]: <> (</details>)
+
+[comment]: <> (</p>)
+
+[comment]: <> (</details>)
+
+[comment]: <> (<details>)
+
+[comment]: <> (<summary>5. Type checks</summary>)
+
+[comment]: <> (<p>)
+
+[comment]: <> (Run `mypy` static type checker)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make mypy)
+
+[comment]: <> (```)
+
+[comment]: <> (</p>)
+
+[comment]: <> (</details>)
+
+[comment]: <> (<details>)
+
+[comment]: <> (<summary>6. Tests with coverage badges</summary>)
+
+[comment]: <> (<p>)
+
+[comment]: <> (Run `pytest`)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make test)
+
+[comment]: <> (```)
+
+[comment]: <> (</p>)
+
+[comment]: <> (</details>)
+
+[comment]: <> (<details>)
+
+[comment]: <> (<summary>7. All linters</summary>)
+
+[comment]: <> (<p>)
+
+[comment]: <> (Of course there is a command to ~~rule~~ run all linters in one:)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make lint)
+
+[comment]: <> (```)
+
+[comment]: <> (the same as:)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make test && make check-codestyle && make mypy && make check-safety)
+
+[comment]: <> (```)
+
+[comment]: <> (</p>)
+
+[comment]: <> (</details>)
+
+[comment]: <> (<details>)
+
+[comment]: <> (<summary>8. Docker</summary>)
+
+[comment]: <> (<p>)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make docker-build)
+
+[comment]: <> (```)
+
+[comment]: <> (which is equivalent to:)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make docker-build VERSION=latest)
+
+[comment]: <> (```)
+
+[comment]: <> (Remove docker image with)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make docker-remove)
+
+[comment]: <> (```)
+
+[comment]: <> (More information [about docker]&#40;https://github.com/lapalap/dora/tree/master/docker&#41;.)
+
+[comment]: <> (</p>)
+
+[comment]: <> (</details>)
+
+[comment]: <> (<details>)
+
+[comment]: <> (<summary>9. Cleanup</summary>)
+
+[comment]: <> (<p>)
+
+[comment]: <> (Delete pycache files)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make pycache-remove)
+
+[comment]: <> (```)
+
+[comment]: <> (Remove package build)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make build-remove)
+
+[comment]: <> (```)
+
+[comment]: <> (Delete .DS_STORE files)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make dsstore-remove)
+
+[comment]: <> (```)
+
+[comment]: <> (Remove .mypycache)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make mypycache-remove)
+
+[comment]: <> (```)
+
+[comment]: <> (Or to remove all above run:)
+
+[comment]: <> (```bash)
+
+[comment]: <> (make cleanup)
+
+[comment]: <> (```)
+
+[comment]: <> (</p>)
+
+[comment]: <> (</details>)
+
+[comment]: <> (## 📈 Releases)
+
+[comment]: <> (You can see the list of available releases on the [GitHub Releases]&#40;https://github.com/lapalap/dora/releases&#41; page.)
+
+[comment]: <> (We follow [Semantic Versions]&#40;https://semver.org/&#41; specification.)
+
+[comment]: <> (We use [`Release Drafter`]&#40;https://github.com/marketplace/actions/release-drafter&#41;. As pull requests are merged, a draft release is kept up-to-date listing the changes, ready to publish when you’re ready. With the categories option, you can categorize pull requests in release notes using labels.)
+
+[comment]: <> (### List of labels and corresponding titles)
+
+[comment]: <> (|               **Label**               |  **Title in Releases**  |)
+
+[comment]: <> (| :-----------------------------------: | :---------------------: |)
+
+[comment]: <> (|       `enhancement`, `feature`        |       🚀 Features       |)
+
+[comment]: <> (| `bug`, `refactoring`, `bugfix`, `fix` | 🔧 Fixes & Refactoring  |)
+
+[comment]: <> (|       `build`, `ci`, `testing`        | 📦 Build System & CI/CD |)
+
+[comment]: <> (|              `breaking`               |   💥 Breaking Changes   |)
+
+[comment]: <> (|            `documentation`            |    📝 Documentation     |)
+
+[comment]: <> (|            `dependencies`             | ⬆️ Dependencies updates |)
+
+[comment]: <> (You can update it in [`release-drafter.yml`]&#40;https://github.com/lapalap/dora/blob/master/.github/release-drafter.yml&#41;.)
+
+[comment]: <> (GitHub creates the `bug`, `enhancement`, and `documentation` labels for you. Dependabot creates the `dependencies` label. Create the remaining labels on the Issues tab of your GitHub repository, when you need them.)
+
+[comment]: <> (## Credits [![🚀 Your next Python package needs a bleeding-edge project structure.]&#40;https://img.shields.io/badge/python--package--template-%F0%9F%9A%80-brightgreen&#41;]&#40;https://github.com/TezRomacH/python-package-template&#41;)
+
+[comment]: <> (This project was generated with [`python-package-template`]&#40;https://github.com/TezRomacH/python-package-template&#41;)

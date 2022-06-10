@@ -25,6 +25,10 @@
 </div>
 <hr />
 
+<div align="center">
+<img src="./assets/images/DORA.svg" height="250"/>
+</div>
+
 <div align="left">
 <img src="./assets/images/Getting%20started.svg" height="32"/>
 </div>

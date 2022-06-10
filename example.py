@@ -12,10 +12,11 @@ my_transforms = transforms.Compose(
     ]
 )
 
-d = Dora(model=model, layer=model.layer4, image_transforms=my_transforms)
+d = Dora(model=model, image_transforms=my_transforms)
 
-d.run(
-    neuron_idx=[i for i in range(512)],
+d.generate_signals(
+    neuron_idx=[i for i in range(10)],
+    layer = model.avgpool,
     objective_fn=ChannelObjective(),
     width=224,
     height=224,
@@ -23,6 +24,6 @@ d.run(
     progress=True,
     save_results=True,
     skip_if_exists=True,
-)
+    experiment_name='model.avgpool',
 
-print(d.results)
+)

@@ -59,7 +59,7 @@ class Dora:
 
         self.results = {}
 
-        self.umap = UmapVisualizer()
+        # self.umap = UmapVisualizer()
 
     def __make_folder(self, name, delete_if_storage_dir_exists=False):
 
@@ -133,7 +133,7 @@ class Dora:
                 f"Using existing sAMS folder at {sAMS_folder}"
             )
         #start generation
-        experiment_name = str(starting_time) if experiment_name is None
+        experiment_name = str(starting_time) if experiment_name is None else experiment_name
         print(
             f"Experiment name: {experiment_name}"
         )

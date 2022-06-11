@@ -2,6 +2,7 @@ import os
 import torch
 import warnings
 import time
+import numpy as np
 import torch.nn as nn
 from tqdm import tqdm
 from PIL import Image
@@ -245,9 +246,11 @@ class Dora:
 
         reduced_encodings = activation_reduction_fn(encodings)
 
+        ## returns indices
         result = self.outlier_detector.run(activations=reduced_encodings)
+        return np.array(neuron_idx)[result]
 
-    def show_results(self):
+    def show_results(self, experiment_name):
         """Generates a plotly plot from the results. Useful to see the outliers in a 2D space.
 
         Raises:

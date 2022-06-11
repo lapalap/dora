@@ -1,4 +1,6 @@
+from random import random
 import umap
+import numpy as np
 import plotly.express as px
 from pyod.models.pca import PCA
 
@@ -9,10 +11,17 @@ OD_METHODS = {
 
 
 class OutlierDetector:
-    def __init__(self, name="PCA"):
+    def __init__(self, name="PCA", outliers_fraction=0.05, random_state=1):
 
         # self.od =
         self.reducer = umap.UMAP()
+        assert (
+            name in OD_METHODS
+        ), f"Expected Outlier detection method to be one of: {OD_METHODS} but got {name}"
+
+        self.outlier_detector = OD_METHODS[name](
+            contamination=outliers_fraction, random_state=random_state
+        )
         self.embeddings = None
         self.activations = None
 
@@ -21,23 +30,13 @@ class OutlierDetector:
         self.embeddings = self.reducer.fit_transform(activations)
 
         outliers = self.detect_outliers(activations=activations)
-        print("DONE")
+        return outliers
 
     def detect_outliers(self, activations):
-        raise NotImplementedError
+        classifier = self.outlier_detector.fit(activations)
+        ## returns a one hot vetcor
+        outliers = classifier.predict(activations)
 
-    def save(self, filename):
-        assert (
-            self.embeddings is not None
-        ), "Embeddings are still None, maybe you did not run UMAP yet"
-        raise NotImplementedError
-
-    def show(self):
-        assert (
-            self.embeddings is not None
-        ), "Embeddings are still None, maybe you did not run UMAP yet"
-
-        fig = px.scatter(
-            x=self.embeddings[:, 0], y=self.embeddings[:, 1], title="DORA Results"
-        )
-        fig.show()
+        ## convert to indices from one hot and take first element from tuple
+        ## se: https://stackoverflow.com/questions/50646102/what-is-the-purpose-of-numpy-where-returning-a-tuple
+        return np.where(outliers == 1)[0]

@@ -12,7 +12,7 @@ from typing import Callable, Union
 from .objectives import ChannelObjective
 from .results import Result
 from .forward_hook import ForwardHook
-from .outlier_detection import UmapVisualizer
+from .outlier_detection import OutlierDetector
 from .reduction_methods import get_mean_along_last_2_dims
 
 warnings.simplefilter("default")
@@ -53,13 +53,12 @@ class Dora:
         self.storage_dir = storage_dir
 
         self.__make_folder(
-            name=storage_dir,
-            delete_if_storage_dir_exists=delete_if_storage_dir_exists
+            name=storage_dir, delete_if_storage_dir_exists=delete_if_storage_dir_exists
         )
 
         self.results = {}
 
-        # self.umap = UmapVisualizer()
+        self.outlier_detector = OutlierDetector(name="PCA")
 
     def __make_folder(self, name, delete_if_storage_dir_exists=False):
 
@@ -77,7 +76,6 @@ class Dora:
                 )
         else:
             os.mkdir(name)
-
 
     def __get_filenames_in_a_folder(self, folder: str):
         """
@@ -107,8 +105,9 @@ class Dora:
         grad_clip=1.0,
         save_results=True,
         skip_if_exists=True,
-        include_logs = True,
-        experiment_name = None,
+        include_logs=True,
+        experiment_name=None,
+        overwrite_experiment=False,
     ):
         """Would generate s-AMS for each neuron inside self.layer based on the objective_fn.
 
@@ -117,33 +116,36 @@ class Dora:
             objective_fn (Callable, optional): The objective function based on which the s-AMS would be generated. See https://github.com/Mayukhdeb/torch-dreams#visualizing-individual-channels-with-custom_func for more info. Defaults to None.
         """
 
-        #time when execution started
+        # time when execution started
         starting_time = time.time()
-        sAMS_folder = self.storage_dir + '/sAMS'
+        sAMS_folder = self.storage_dir + "/sAMS"
 
-        #creating a subfolder for sAMS (if not exists)
+        # creating a subfolder for sAMS (if not exists)
         folder_exists = os.path.exists(sAMS_folder)
         if folder_exists == False:
             os.mkdir(sAMS_folder)
-            print(
-                f"Subfolder for sAMS created at {sAMS_folder}"
-            )
+            print(f"Subfolder for sAMS created at {sAMS_folder}")
         else:
-            print(
-                f"Using existing sAMS folder at {sAMS_folder}"
-            )
-        #start generation
-        experiment_name = str(starting_time) if experiment_name is None else experiment_name
-        print(
-            f"Experiment name: {experiment_name}"
+            print(f"Using existing sAMS folder at {sAMS_folder}")
+        # start generation
+        experiment_name = (
+            str(starting_time) if experiment_name is None else experiment_name
         )
-        experiment_folder = sAMS_folder + '/' + experiment_name
+        print(f"Experiment name: {experiment_name}")
+        experiment_folder = sAMS_folder + "/" + experiment_name
         self.results[experiment_name] = {}
 
-
-        #TODO: check if experiment folder exists (well, it shouldn't, but still)
+        # TODO: check if experiment folder exists (well, it shouldn't, but still)
         experiment_folder_exists = os.path.exists(experiment_folder)
-        os.mkdir(experiment_folder)
+
+        if not experiment_folder_exists:
+            os.mkdir(experiment_folder)
+        elif experiment_folder_exists == True and overwrite_experiment == True:
+            print(f"Overwriting experiment: {experiment_name}")
+        else:
+            raise Exception(
+                f"an experiment with the name {experiment_name} already exists, set overwrite_experiment = True if you want to overwrite it"
+            )
 
         if isinstance(neuron_idx, int):
             neuron_idx = [neuron_idx]
@@ -210,10 +212,7 @@ class Dora:
         raise NotImplementedError
 
     @torch.no_grad()
-    def collect_encodings(self,
-                          layer,
-                          experiment_name,
-                          neuron_idx=None):
+    def collect_encodings(self, layer, experiment_name, neuron_idx=None):
 
         # if neuron_idx is None, iterate over all results
         if neuron_idx is None:
@@ -237,14 +236,16 @@ class Dora:
         if neuron_idx is None:
             neuron_idx = list(self.results[experiment_name].keys())
 
-        encodings = torch.cat([self.results[experiment_name][i].encoding for i in neuron_idx], dim=0)
+        encodings = torch.cat(
+            [self.results[experiment_name][i].encoding for i in neuron_idx], dim=0
+        )
         assert (
             encodings.ndim == 4
         ), "Expected activations to have 4 dimensions [N, C, *, *] but got {encodings.ndim}"
 
         reduced_encodings = activation_reduction_fn(encodings)
 
-        result = self.umap.run(activations=reduced_encodings)
+        result = self.outlier_detector.run(activations=reduced_encodings)
 
     def show_results(self):
         """Generates a plotly plot from the results. Useful to see the outliers in a 2D space.

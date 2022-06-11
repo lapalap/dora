@@ -263,6 +263,8 @@ class Dora:
             embeddings=self.outlier_detector.embeddings,
             outlier_neuron_idx=result_neuron_indices,
             neuron_idx=neuron_idx,
+            experiment_name=experiment_name,
+            storage_dir = self.storage_dir
         )
 
     def show_results(self, experiment_name):

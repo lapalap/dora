@@ -1,33 +1,71 @@
-import plotly.express as px
+import plotly.graph_objects as go
+
 import numpy as np
 
 from dash import Dash, dcc, html, Input, Output, no_update
 
 
 class OutlierVisualizer:
-    def __init__(self, embeddings, outlier_neuron_idx, neuron_idx):
+    def __init__(
+        self,
+        embeddings,
+        outlier_neuron_idx,
+        neuron_idx,
+        experiment_name,
+        storage_dir,
+    ):
         self.embeddings = embeddings
         self.outlier_neuron_idx = outlier_neuron_idx
         self.neuron_idx = neuron_idx
+        self.storage_dir = storage_dir
+        self.experiment_name = experiment_name
+
+        self.indices_of_outlier_neuron_indices = np.sort(
+            np.array(self.neuron_idx)
+        ).searchsorted(self.outlier_neuron_idx)
+
+        mask = np.ones(len(embeddings), np.bool)
+        mask[self.indices_of_outlier_neuron_indices] = 0
+        self.indices_of_normal_neuron_indices = mask
 
         self.color_codes = np.array(["normal" for i in range(len(embeddings))])
-        self.color_codes[outlier_neuron_idx] = "outlier"
+        self.color_codes[self.indices_of_outlier_neuron_indices] = "outlier"
 
-    def show_plotly(self):
-        fig = px.scatter(
-            x=self.embeddings[:, 0],
-            y=self.embeddings[:, 1],
-            color=self.color_codes,
+        print("DASH", self.indices_of_normal_neuron_indices)
+
+    def render_plotly(self):
+        fig = go.Figure()
+
+        fig.add_trace(
+            go.Scatter(
+                x=self.embeddings[self.indices_of_normal_neuron_indices, 0],
+                y=self.embeddings[self.indices_of_normal_neuron_indices, 1],
+                mode="markers",
+                name="Normal",
+            )
         )
 
-        fig.show()
+        fig.add_trace(
+            go.Scatter(
+                x=self.embeddings[self.indices_of_outlier_neuron_indices, 0],
+                y=self.embeddings[self.indices_of_outlier_neuron_indices, 1],
+                mode="markers",
+                name="Outlier",
+            )
+        )
+
+        fig.update_layout(
+            title="Plot Title",
+            xaxis_title="X",
+            yaxis_title="Y",
+            legend_title="Neuron type",
+            font=dict(family="Courier New, monospace", size=22),
+        )
+
+        return fig
 
     def visualize(self):
-        fig = px.scatter(
-            x=self.embeddings[:, 0],
-            y=self.embeddings[:, 1],
-            color=self.color_codes,
-        )
+        fig = self.render_plotly()
 
         app = Dash(__name__)
 
@@ -46,8 +84,16 @@ class OutlierVisualizer:
             bbox = pt["bbox"]
             num = pt["pointNumber"]
 
-            img_src = ".dora/sAMS/model.avgpool/36.jpg"
-            desc = "neuron desc"
+            from PIL import Image
+
+            filename = (
+                self.storage_dir
+                + "/sAMS/"
+                + self.experiment_name
+                + f"/{self.neuron_idx[num]}.jpg"
+            )
+            img_src = Image.open(filename)
+            desc = f"Neuron idx: {self.neuron_idx[num]}\nfilename:{filename}"
             if len(desc) > 300:
                 desc = desc[:100] + "..."
 
@@ -69,3 +115,5 @@ class OutlierVisualizer:
                 dcc.Tooltip(id="graph-tooltip"),
             ]
         )
+
+        app.run_server(debug=True)

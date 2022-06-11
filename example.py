@@ -16,7 +16,7 @@ d = Dora(model=model, image_transforms=my_transforms)
 
 d.generate_signals(
     neuron_idx=[i for i in range(10)],
-    layer = model.avgpool,
+    layer=model.avgpool,
     objective_fn=ChannelObjective(),
     width=224,
     height=224,
@@ -24,11 +24,13 @@ d.generate_signals(
     progress=True,
     save_results=True,
     skip_if_exists=True,
-    experiment_name='model.avgpool',
+    experiment_name="model.avgpool",
+    overwrite_experiment=True,
 )
 
-d.collect_encodings(layer = model.avgpool,
-                    experiment_name='model.avgpool',
-                    )
+d.collect_encodings(
+    layer=model.avgpool,
+    experiment_name="model.avgpool",
+)
 
-print(d.results)
+print(type(d.results["model.avgpool"][0]))

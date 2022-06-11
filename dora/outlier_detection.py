@@ -1,7 +1,5 @@
-from random import random
 import umap
 import numpy as np
-import plotly.express as px
 from pyod.models.pca import PCA
 
 OD_METHODS = {
@@ -13,7 +11,6 @@ OD_METHODS = {
 class OutlierDetector:
     def __init__(self, name="PCA", outliers_fraction=0.05, random_state=1):
 
-        # self.od =
         self.reducer = umap.UMAP()
         assert (
             name in OD_METHODS

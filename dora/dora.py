@@ -15,6 +15,7 @@ from .results import Result
 from .forward_hook import ForwardHook
 from .outlier_detection import OutlierDetector
 from .reduction_methods import get_mean_along_last_2_dims
+from .visualizer import OutlierVisualizer
 
 warnings.simplefilter("default")
 
@@ -27,6 +28,9 @@ class Dora:
         storage_dir=".dora/",
         delete_if_storage_dir_exists=False,
         device=None,
+        outlier_detection_method="PCA",
+        outliers_fraction=0.05,
+        random_state=1,
     ):
         """Handles all stuff dora related. Would require a storage_dir where it would store the synthetic Activatiion
         Maximization Signals (s-AMS) as images which would be fed into self.model to collect activations.
@@ -59,7 +63,11 @@ class Dora:
 
         self.results = {}
 
-        self.outlier_detector = OutlierDetector(name="PCA")
+        self.outlier_detector = OutlierDetector(
+            name=outlier_detection_method,
+            outliers_fraction=outliers_fraction,
+            random_state=random_state,
+        )
 
     def __make_folder(self, name, delete_if_storage_dir_exists=False):
 
@@ -232,6 +240,7 @@ class Dora:
         experiment_name,
         neuron_idx=None,
         activation_reduction_fn: Callable = get_mean_along_last_2_dims,
+        get_embeddings=True,
     ):
         # if neuron_idx is None, iterate over all results
         if neuron_idx is None:
@@ -248,7 +257,13 @@ class Dora:
 
         ## returns indices
         result = self.outlier_detector.run(activations=reduced_encodings)
-        return np.array(neuron_idx)[result]
+        result_neuron_indices = np.array(neuron_idx)[result]
+
+        return OutlierVisualizer(
+            embeddings=self.outlier_detector.embeddings,
+            outlier_neuron_idx=result_neuron_indices,
+            neuron_idx=neuron_idx,
+        )
 
     def show_results(self, experiment_name):
         """Generates a plotly plot from the results. Useful to see the outliers in a 2D space.

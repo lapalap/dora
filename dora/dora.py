@@ -339,7 +339,7 @@ class Dora:
         result_neuron_indices = np.array(neuron_idx)[result]
 
         return OutlierVisualizer(
-            embeddings=self.outlier_detector.embeddings,
+            embeddings=outlier_detector.embeddings,
             outlier_neuron_idx=result_neuron_indices,
             neuron_idx=neuron_idx,
             experiment_name=experiment_name,

@@ -97,6 +97,7 @@ class Dora:
 
     def generate_signals(
         self,
+        experiment_name,
         layer: nn.Module,
         progress: bool = False,
         objective_fn: Callable = None,
@@ -115,7 +116,6 @@ class Dora:
         save_results=True,
         skip_if_exists=True,
         include_logs=True,
-        experiment_name=None,
         overwrite_experiment=False,
     ):
         """Would generate s-AMS for each neuron inside self.layer based on the objective_fn.
@@ -264,7 +264,7 @@ class Dora:
             outlier_neuron_idx=result_neuron_indices,
             neuron_idx=neuron_idx,
             experiment_name=experiment_name,
-            storage_dir = self.storage_dir
+            storage_dir=self.storage_dir,
         )
 
     def show_results(self, experiment_name):

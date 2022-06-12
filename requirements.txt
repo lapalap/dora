@@ -1,2 +1,3 @@
 torch-dreams
 dash
+umap-learn

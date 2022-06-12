@@ -1,3 +1,4 @@
 torch-dreams
 dash
 umap-learn
+pyod

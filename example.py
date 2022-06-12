@@ -12,7 +12,7 @@ my_transforms = transforms.Compose(
     ]
 )
 
-d = Dora(model=model, image_transforms=my_transforms)
+d = Dora(model=model, image_transforms=my_transforms, outlier_detection_method="PCA")
 
 d.generate_signals(
     neuron_idx=[i for i in range(10)],
@@ -20,12 +20,12 @@ d.generate_signals(
     objective_fn=ChannelObjective(),
     width=224,
     height=224,
-    iters=1,
+    iters=100,
     progress=True,
     save_results=True,
     skip_if_exists=True,
     experiment_name="model.avgpool",
-    overwrite_experiment=True,
+    overwrite_experiment=True,  ## use what already exists
 )
 
 d.collect_encodings(
@@ -33,4 +33,12 @@ d.collect_encodings(
     experiment_name="model.avgpool",
 )
 
-print(type(d.results["model.avgpool"][0]))
+result = d.run_outlier_detection(
+    experiment_name="model.avgpool",
+    neuron_idx=[i for i in range(10)],
+)
+
+print(result.embeddings.shape)  ## shape:[*, 2]
+print(result.outlier_neuron_idx)  ## list of neuron indices which were outliers
+
+result.visualize()  ## runs interactive dash app

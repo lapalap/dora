@@ -24,7 +24,7 @@ class OutlierVisualizer:
             np.array(self.neuron_idx)
         ).searchsorted(self.outlier_neuron_idx)
 
-        mask = np.ones(len(embeddings), np.bool)
+        mask = np.ones(len(embeddings), bool)
         mask[self.indices_of_outlier_neuron_indices] = 0
         self.indices_of_normal_neuron_indices = mask
 

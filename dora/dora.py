@@ -27,7 +27,7 @@ class Dora:
         model: nn.Module,
         image_transforms: Callable,
         storage_dir=".dora/",
-        device=None,
+        device="cpu",
     ):
         """Handles all stuff dora related. Would require a storage_dir where it would store the synthetic Activatiion
         Maximization Signals (s-AMS) as images which would be fed into self.model to collect activations.
@@ -42,9 +42,7 @@ class Dora:
             device (str, optional): specifies the device to be used for the model, for example, 'cuda:0'. If set to None, it automatically looks for a device. Defaults to None.
         """
 
-        if device is None:
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+        self.device = device
         self.model = model
         self.image_transforms = image_transforms
         self.dreamer = dreamer(model=self.model, quiet=True, device=device)
@@ -158,8 +156,8 @@ class Dora:
         self,
         experiment_name,
         layer: nn.Module,
-        progress: bool = False,
-        objective_fn: Callable = None,
+        objective_fn: Callable,
+        progress: bool = True,
         neuron_idx: Union[list, int] = None,
         width=256,
         height=256,
@@ -301,9 +299,11 @@ class Dora:
 
         for idx in tqdm(neuron_idx, desc="Collecting encodings"):
             input_tensor = self.results[experiment_name][idx].s_ams
-            y = self.model.forward(input_tensor)
+            y = self.model.forward(input_tensor.to(self.device))
 
             self.results[experiment_name][idx].encoding = hook.output
+
+        hook.close()
 
     def run_outlier_detection(
         self,

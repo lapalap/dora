@@ -31,8 +31,6 @@ class OutlierVisualizer:
         self.color_codes = np.array(["normal" for i in range(len(embeddings))])
         self.color_codes[self.indices_of_outlier_neuron_indices] = "outlier"
 
-        print("DASH", self.indices_of_normal_neuron_indices)
-
     def render_plotly(self):
         fig = go.Figure()
 
@@ -55,17 +53,18 @@ class OutlierVisualizer:
         )
 
         fig.update_layout(
-            title="Plot Title",
+            title=f"DORA Experiment: {self.experiment_name}",
             xaxis_title="X",
             yaxis_title="Y",
             legend_title="Neuron type",
-            font=dict(family="Courier New, monospace", size=22),
+            font=dict(size=25),
         )
 
         return fig
 
     def visualize(self):
         fig = self.render_plotly()
+        fig.update_traces(hoverinfo="none", hovertemplate=None)
 
         app = Dash(__name__)
 
@@ -93,9 +92,7 @@ class OutlierVisualizer:
                 + f"/{self.neuron_idx[num]}.jpg"
             )
             img_src = Image.open(filename)
-            desc = f"Neuron idx: {self.neuron_idx[num]}\nfilename:{filename}"
-            if len(desc) > 300:
-                desc = desc[:100] + "..."
+            desc = f"Neuron idx: {self.neuron_idx[num]}"
 
             children = [
                 html.Div(
@@ -103,7 +100,7 @@ class OutlierVisualizer:
                         html.Img(src=img_src, style={"width": "100%"}),
                         html.P(f"{desc}"),
                     ],
-                    style={"width": "200px", "white-space": "normal"},
+                    # style={"width": "200px", "white-space": "normal"},
                 )
             ]
 
@@ -113,7 +110,8 @@ class OutlierVisualizer:
             [
                 dcc.Graph(id="graph-basic-2", figure=fig, clear_on_unhover=True),
                 dcc.Tooltip(id="graph-tooltip"),
-            ]
+            ],
+            style={"height": "100vh", "padding": 10},
         )
 
         app.run_server(debug=True)

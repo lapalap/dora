@@ -1,4 +1,5 @@
 import os
+import json
 import torch
 import warnings
 import time
@@ -26,11 +27,7 @@ class Dora:
         model: nn.Module,
         image_transforms: Callable,
         storage_dir=".dora/",
-        delete_if_storage_dir_exists=False,
         device=None,
-        outlier_detection_method="PCA",
-        outliers_fraction=0.05,
-        random_state=1,
     ):
         """Handles all stuff dora related. Would require a storage_dir where it would store the synthetic Activatiion
         Maximization Signals (s-AMS) as images which would be fed into self.model to collect activations.
@@ -57,19 +54,11 @@ class Dora:
 
         self.storage_dir = storage_dir
 
-        self.__make_folder(
-            name=storage_dir, delete_if_storage_dir_exists=delete_if_storage_dir_exists
-        )
+        self.make_folder_if_it_doesnt_exist(name=storage_dir)
 
         self.results = {}
 
-        self.outlier_detector = OutlierDetector(
-            name=outlier_detection_method,
-            outliers_fraction=outliers_fraction,
-            random_state=random_state,
-        )
-
-    def __make_folder(self, name, delete_if_storage_dir_exists=False):
+    def make_folder_if_it_doesnt_exist(self, name):
 
         if name[-1] == "/":
             name = name[:-1]
@@ -78,10 +67,9 @@ class Dora:
 
         if folder_exists == True:
             num_files = len(self.__get_filenames_in_a_folder(folder=name))
-            print(num_files)
             if num_files > 0:
                 warnings.warn(
-                    f"Folder: {name} already exists and has {num_files} items ,if you want to delete it then set delete_if_storage_dir_exists = True"
+                    f"Folder: {name} already exists and has {num_files} items"
                 )
         else:
             os.mkdir(name)
@@ -94,6 +82,77 @@ class Dora:
         files = os.listdir(folder)
         files = [f"{folder}/" + x for x in files]
         return files
+
+    def check_if_a_different_config_exists_with_same_name(self, filename, data):
+        overwrite_neurons = False
+
+        config_already_exists = os.path.exists(filename)
+        if config_already_exists == True:
+            existing_config = json.load(open(filename))
+            for (k1, v1), (k2, v2) in zip(existing_config.items(), data.items()):
+
+                assert (
+                    k1 == k2
+                ), f"Expected keys in config to be the same, but got {k1} and {k1}"
+
+                if k1 != "neuron_idx":
+                    ## if config fully matches, then do not overwrite existing neurons
+                    if v1 == v2:
+                        pass
+                    else:
+                        overwrite_neurons = True
+                        break
+        else:
+            overwrite_neurons = True
+
+        return overwrite_neurons
+
+    def check_and_write_config(
+        self,
+        experiment_name,
+        neuron_idx,
+        width,
+        height,
+        iters,
+        lr,
+        rotate_degrees,
+        scale_max,
+        scale_min,
+        translate_x,
+        translate_y,
+        weight_decay,
+        grad_clip,
+    ):
+        data = {
+            "experiment_name": experiment_name,
+            "neuron_idx": neuron_idx,
+            "width": width,
+            "height": height,
+            "iters": iters,
+            "lr": lr,
+            "rotate_degrees": rotate_degrees,
+            "scale_max": scale_max,
+            "scale_min": scale_min,
+            "translate_x": translate_x,
+            "translate_y": translate_y,
+            "weight_decay": weight_decay,
+            "grad_clip": grad_clip,
+        }
+        folder_name = self.storage_dir + "/configs"
+
+        self.make_folder_if_it_doesnt_exist(name=folder_name)
+        filename = folder_name + "/" + experiment_name + ".json"
+
+        overwrite_neurons = self.check_if_a_different_config_exists_with_same_name(
+            filename=filename, data=data
+        )
+
+        ## if this is true then either the config does NOT already exists or exists with different params
+        if overwrite_neurons == True:
+            with open(filename, "w") as fp:
+                json.dump(data, fp)
+
+        return overwrite_neurons
 
     def generate_signals(
         self,
@@ -113,9 +172,6 @@ class Dora:
         translate_y=0.2,
         weight_decay=1e-2,
         grad_clip=1.0,
-        save_results=True,
-        skip_if_exists=True,
-        include_logs=True,
         overwrite_experiment=False,
     ):
         """Would generate s-AMS for each neuron inside self.layer based on the objective_fn.
@@ -124,6 +180,25 @@ class Dora:
             progress (bool, optional): Set to True if you want to see tqdm progress. Defaults to False.
             objective_fn (Callable, optional): The objective function based on which the s-AMS would be generated. See https://github.com/Mayukhdeb/torch-dreams#visualizing-individual-channels-with-custom_func for more info. Defaults to None.
         """
+
+        ## config exists and matches - skip existing neurons
+        ## config exists but does not match - overwrite existing neurons
+        ## no config found - nothing
+        overwrite_neurons = self.check_and_write_config(
+            experiment_name=experiment_name,
+            neuron_idx=neuron_idx,
+            width=width,
+            height=height,
+            iters=iters,
+            lr=lr,
+            rotate_degrees=rotate_degrees,
+            scale_max=scale_max,
+            scale_min=scale_min,
+            translate_x=translate_x,
+            translate_y=translate_y,
+            weight_decay=weight_decay,
+            grad_clip=grad_clip,
+        )
 
         # time when execution started
         starting_time = time.time()
@@ -170,13 +245,9 @@ class Dora:
             if isinstance(objective_fn, ChannelObjective):
                 objective_fn.channel_number = idx
 
-            if (
-                save_results == True
-                and skip_if_exists == True
-                and os.path.exists(filename) == True
-            ):
+            if overwrite_neurons == False and os.path.exists(filename) == True:
                 print(
-                    f"skippping neuron index:{idx} because it already exists here: {filename}"
+                    f"skippping neuron index:{idx} because it already exists here: {filename} with the same generation config"
                 )
                 image = Image.open(filename)
 
@@ -209,8 +280,7 @@ class Dora:
                     encoding=None,
                 )
 
-                if save_results is True:
-                    image_param.save(filename=filename)
+                image_param.save(filename=filename)
 
         # TODO: add logs to the experiment folder -- like hyperparameters information and etc..
 
@@ -240,8 +310,17 @@ class Dora:
         experiment_name,
         neuron_idx=None,
         activation_reduction_fn: Callable = get_mean_along_last_2_dims,
-        get_embeddings=True,
+        method="PCA",
+        outliers_fraction=0.05,
+        random_state=1,
     ):
+
+        outlier_detector = OutlierDetector(
+            name=method,
+            outliers_fraction=outliers_fraction,
+            random_state=random_state,
+        )
+
         # if neuron_idx is None, iterate over all results
         if neuron_idx is None:
             neuron_idx = list(self.results[experiment_name].keys())
@@ -251,12 +330,12 @@ class Dora:
         )
         assert (
             encodings.ndim == 4
-        ), "Expected activations to have 4 dimensions [N, C, *, *] but got {encodings.ndim}"
+        ), f"Expected activations to have 4 dimensions [N, C, *, *] but got {encodings.ndim}"
 
         reduced_encodings = activation_reduction_fn(encodings)
 
         ## returns indices
-        result = self.outlier_detector.run(activations=reduced_encodings)
+        result = outlier_detector.run(activations=reduced_encodings)
         result_neuron_indices = np.array(neuron_idx)[result]
 
         return OutlierVisualizer(

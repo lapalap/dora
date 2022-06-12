@@ -5,6 +5,16 @@ import numpy as np
 from dash import Dash, dcc, html, Input, Output, no_update
 from jupyter_dash import JupyterDash
 
+from PIL import Image
+
+
+class SAMSCollection:
+    def __init__(self, filenames):
+        self.filenames = filenames
+
+    def __getitem__(self, idx):
+        return Image.open(self.filenames[idx])
+
 
 class OutlierVisualizer:
     def __init__(
@@ -31,6 +41,13 @@ class OutlierVisualizer:
 
         self.color_codes = np.array(["normal" for i in range(len(embeddings))])
         self.color_codes[self.indices_of_outlier_neuron_indices] = "outlier"
+
+        self.filenames = [
+            (self.storage_dir + "/sAMS/" + self.experiment_name + f"/{idx}.jpg")
+            for idx in self.neuron_idx
+        ]
+
+        self.neurons = SAMSCollection(filenames=self.filenames)
 
     def render_plotly(self):
         fig = go.Figure()
@@ -89,13 +106,7 @@ class OutlierVisualizer:
 
             from PIL import Image
 
-            filename = (
-                self.storage_dir
-                + "/sAMS/"
-                + self.experiment_name
-                + f"/{self.neuron_idx[num]}.jpg"
-            )
-            img_src = Image.open(filename)
+            img_src = Image.open(self.filenames[num])
             desc = f"Neuron idx: {self.neuron_idx[num]}"
 
             children = [

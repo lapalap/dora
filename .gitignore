@@ -14,3 +14,7 @@ env-dora/
 .DS_Store
 .AppleDouble
 .LSOverride
+
+## pycache and other python stuff
+__pycache__
+dora.egg-info/

@@ -149,6 +149,7 @@ class Dora:
         if overwrite_neurons == True:
             with open(filename, "w") as fp:
                 json.dump(data, fp)
+            fp.close()
 
         return overwrite_neurons
 

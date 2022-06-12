@@ -34,7 +34,7 @@ jobs:
       - name: Run tests
         run: |
           echo "running tests.."
-          pytest -v tests/test.py  
+          pytest -v tests/test.py --cov=dora --cov-report=xml
           echo "tests complete!"
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1

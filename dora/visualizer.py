@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 import numpy as np
 
 from dash import Dash, dcc, html, Input, Output, no_update
+from jupyter_dash import JupyterDash
 
 
 class OutlierVisualizer:
@@ -66,7 +67,10 @@ class OutlierVisualizer:
         fig = self.render_plotly()
         fig.update_traces(hoverinfo="none", hovertemplate=None)
 
-        app = Dash(__name__)
+        if notebook_mode is False:
+            app = Dash(__name__)
+        else:
+            app = JupyterDash(__name__)
 
         @app.callback(
             Output("graph-tooltip", "show"),

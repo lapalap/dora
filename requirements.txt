@@ -2,3 +2,4 @@ torch-dreams
 dash
 umap-learn
 pyod
+jupyter-dash

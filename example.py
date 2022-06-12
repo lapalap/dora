@@ -1,3 +1,4 @@
+from importlib_metadata import method_cache
 from dora import Dora
 from dora.objectives import ChannelObjective
 
@@ -12,7 +13,7 @@ my_transforms = transforms.Compose(
     ]
 )
 
-d = Dora(model=model, image_transforms=my_transforms, outlier_detection_method="PCA")
+d = Dora(model=model, image_transforms=my_transforms)
 
 d.generate_signals(
     neuron_idx=[i for i in range(10)],
@@ -20,25 +21,19 @@ d.generate_signals(
     objective_fn=ChannelObjective(),
     width=224,
     height=224,
-    iters=100,
-    progress=True,
-    save_results=True,
-    skip_if_exists=True,
+    iters=200,
     experiment_name="model.avgpool",
-    overwrite_experiment=True,  ## use what already exists
+    overwrite_experiment=True,  ## will still use what already exists if generation params are same
 )
 
-d.collect_encodings(
-    layer=model.avgpool,
-    experiment_name="model.avgpool",
-)
+d.collect_encodings(layer=model.avgpool, experiment_name="model.avgpool")
 
 result = d.run_outlier_detection(
-    experiment_name="model.avgpool",
-    neuron_idx=[i for i in range(10)],
+    experiment_name="model.avgpool", neuron_idx=[i for i in range(10)], method="PCA"
 )
 
-print(result.embeddings.shape)  ## shape:[*, 2]
+print(result.embeddings.shape)  ## shape:[len(neuron_idx), 2]
 print(result.outlier_neuron_idx)  ## list of neuron indices which were outliers
 
-result.visualize()  ## runs interactive dash app
+## runs an interactive dash app on http://127.0.0.1:8050/
+result.visualize()

@@ -20,7 +20,7 @@
 <hr />
 
 <div align="center">
-<img src="./assets/images/DORA.svg" height="250"/>
+<img src="./assets/images/DORA.svg" height="350"/>
 </div>
 
 <div align="left">

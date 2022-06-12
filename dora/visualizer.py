@@ -62,7 +62,7 @@ class OutlierVisualizer:
 
         return fig
 
-    def visualize(self):
+    def visualize(self, notebook_mode=False):
         fig = self.render_plotly()
         fig.update_traces(hoverinfo="none", hovertemplate=None)
 
@@ -114,4 +114,7 @@ class OutlierVisualizer:
             style={"height": "100vh", "padding": 10},
         )
 
-        app.run_server(debug=True)
+        if notebook_mode == False:
+            app.run_server(debug=True)
+        else:
+            app.run_server(debug=True, mode="inline")

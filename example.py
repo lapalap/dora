@@ -1,11 +1,13 @@
-from importlib_metadata import method_cache
-from dora import Dora
-from dora.objectives import ChannelObjective
-
+import torch
 import torchvision.models as models
 import torchvision.transforms as transforms
 
-model = models.resnet18(pretrained=True).eval()
+from dora import Dora
+from dora.objectives import ChannelObjective
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+model = models.resnet18(pretrained=True).eval().to(device)
 my_transforms = transforms.Compose(
     [
         transforms.ToTensor(),
@@ -13,7 +15,7 @@ my_transforms = transforms.Compose(
     ]
 )
 
-d = Dora(model=model, image_transforms=my_transforms)
+d = Dora(model=model, image_transforms=my_transforms, device=device)
 
 d.generate_signals(
     neuron_idx=[i for i in range(10)],

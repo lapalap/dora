@@ -8,6 +8,7 @@
 <div align="center">
 
 [![tests](https://github.com/lapalap/dora/actions/workflows/main.yml/badge.svg)](https://github.com/lapalap/dora/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/lapalap/dora/branch/dev/graph/badge.svg?token=UQ3QSHKSNR)](https://codecov.io/gh/lapalap/dora)
 [![Dependencies Status](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)](https://github.com/lapalap/dora/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Aapp%2Fdependabot)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![License](https://img.shields.io/github/license/lapalap/dora)](https://github.com/lapalap/dora/blob/master/LICENSE)

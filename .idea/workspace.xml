@@ -1,38 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d1f3c861-f76a-4e67-ad9f-6eb423aec813" name="Changes" comment="moved docs to gh-pages branch 📚">
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/7.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool/9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/7.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool2/9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/7.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dora/sAMS/model.avgpool3/9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="d1f3c861-f76a-4e67-ad9f-6eb423aec813" name="Changes" comment="added documentation 📚">
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/make.bat" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +27,14 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="28bvfVvXQUw3GxklhBGhi2x1e09" />
   <component name="ProjectLevelVcsManager">
@@ -146,6 +127,7 @@
       <workItem from="1654809779972" duration="11128000" />
       <workItem from="1655055152263" duration="145000" />
       <workItem from="1655055301237" duration="4592000" />
+      <workItem from="1655112354776" duration="379000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <created>1651498228030</created>
@@ -336,7 +318,14 @@
       <option name="project" value="LOCAL" />
       <updated>1655112201040</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="added documentation 📚">
+      <created>1655112575444</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1655112575444</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -381,7 +370,8 @@
     <MESSAGE value="created a documentation " />
     <MESSAGE value="created a documentation branch " />
     <MESSAGE value="moved docs to gh-pages branch " />
-    <option name="LAST_COMMIT_MESSAGE" value="moved docs to gh-pages branch " />
+    <MESSAGE value="added documentation " />
+    <option name="LAST_COMMIT_MESSAGE" value="added documentation " />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/dora$example.coverage" NAME="example Coverage Results" MODIFIED="1654860402258" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

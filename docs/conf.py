@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'DORA'
-copyright = '2022, sphinx-quickstart'
-author = 'sphinx-quickstart'
+copyright = '2022, Kirill Bykov, Mayukh Deb'
+author = 'Kirill Bykov, Mayukh Deb'
 
 
 # -- General configuration ---------------------------------------------------

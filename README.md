@@ -7,6 +7,7 @@
 <h6>PyTorch version</h6></div>
 <div align="center">
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lapalap/dora/blob/dev/examples/hello_dora.ipynb)
 [![tests](https://github.com/lapalap/dora/actions/workflows/main.yml/badge.svg)](https://github.com/lapalap/dora/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/lapalap/dora/branch/dev/graph/badge.svg?token=UQ3QSHKSNR)](https://codecov.io/gh/lapalap/dora)
 [![Dependencies Status](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)](https://github.com/lapalap/dora/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Aapp%2Fdependabot)

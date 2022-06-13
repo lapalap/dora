@@ -19,7 +19,7 @@ setuptools.setup(
     install_requires=required,
     python_requires=">=3.6",
     include_package_data=True,
-    keywords=["machine learning", "neural networks"],
+    keywords=["machine learning", "neural networks", "representation analysis"],
     classifiers=[
         "Natural Language :: English",
         "Programming Language :: Python :: 3.6",

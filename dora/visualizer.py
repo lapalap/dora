@@ -89,7 +89,7 @@ class OutlierVisualizer:
                     x=self.embeddings[self.indices_of_outlier_neuron_indices, 0],
                     y=self.embeddings[self.indices_of_outlier_neuron_indices, 1],
                     mode="markers",
-                    name=self.curve_number_mapping[0],
+                    name=self.curve_number_mapping[1],
                 ),
             ]
         )

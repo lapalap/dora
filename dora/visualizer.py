@@ -50,6 +50,32 @@ class OutlierVisualizer:
 
         self.curve_number_mapping = {0: "normal", 1: "outlier"}
 
+    def get_outlier_neurons(self):
+        data = []
+        count = 0
+        for idx in self.indices_of_outlier_neuron_indices:
+            data.append(
+                {
+                    "neuron_idx": self.neuron_idx[idx],
+                    "image": Image.open(self.filenames[idx]),
+                }
+            )
+            count += 1
+        return data
+
+    def get_normal_neurons(self):
+        data = []
+        count = 0
+        for idx in self.indices_of_normal_neuron_indices:
+            data.append(
+                {
+                    "neuron_idx": self.neuron_idx[idx],
+                    "image": Image.open(self.filenames[idx]),
+                }
+            )
+            count += 1
+        return data
+
     def render_plotly(self):
         fig = go.Figure(
             data=[

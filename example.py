@@ -6,6 +6,7 @@ from dora import Dora
 from dora.objectives import ChannelObjective
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+neuron_indices = [i for i in range(100, 200)]
 
 model = models.resnet18(pretrained=True).eval().to(device)
 my_transforms = transforms.Compose(
@@ -18,7 +19,7 @@ my_transforms = transforms.Compose(
 d = Dora(model=model, image_transforms=my_transforms, device=device)
 
 d.generate_signals(
-    neuron_idx=[i for i in range(10)],
+    neuron_idx=neuron_indices,
     layer=model.avgpool,
     objective_fn=ChannelObjective(),
     width=224,
@@ -31,7 +32,10 @@ d.generate_signals(
 d.collect_encodings(layer=model.avgpool, experiment_name="model.avgpool")
 
 result = d.run_outlier_detection(
-    experiment_name="model.avgpool", neuron_idx=[i for i in range(10)], method="PCA"
+    experiment_name="model.avgpool",
+    neuron_idx=neuron_indices,
+    method="PCA",
+    outliers_fraction=0.1,
 )
 
 print(result.embeddings.shape)  ## shape:[len(neuron_idx), 2]

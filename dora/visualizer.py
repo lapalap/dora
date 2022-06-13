@@ -1,11 +1,9 @@
+import numpy as np
+from PIL import Image
 import plotly.graph_objects as go
 
-import numpy as np
-
-from dash import Dash, dcc, html, Input, Output, no_update
 from jupyter_dash import JupyterDash
-
-from PIL import Image
+from dash import Dash, dcc, html, Input, Output, no_update
 
 
 class SAMSCollection:
@@ -37,7 +35,8 @@ class OutlierVisualizer:
 
         mask = np.ones(len(embeddings), bool)
         mask[self.indices_of_outlier_neuron_indices] = 0
-        self.indices_of_normal_neuron_indices = mask
+        ## mask is a bool array
+        self.indices_of_normal_neuron_indices = np.where(mask == True)[0]
 
         self.color_codes = np.array(["normal" for i in range(len(embeddings))])
         self.color_codes[self.indices_of_outlier_neuron_indices] = "outlier"
@@ -49,25 +48,50 @@ class OutlierVisualizer:
 
         self.neurons = SAMSCollection(filenames=self.filenames)
 
+        self.curve_number_mapping = {0: "normal", 1: "outlier"}
+
+    def get_outlier_neurons(self):
+        data = []
+        count = 0
+        for idx in self.indices_of_outlier_neuron_indices:
+            data.append(
+                {
+                    "neuron_idx": self.neuron_idx[idx],
+                    "image": Image.open(self.filenames[idx]),
+                }
+            )
+            count += 1
+        return data
+
+    def get_normal_neurons(self):
+        data = []
+        count = 0
+        for idx in self.indices_of_normal_neuron_indices:
+            data.append(
+                {
+                    "neuron_idx": self.neuron_idx[idx],
+                    "image": Image.open(self.filenames[idx]),
+                }
+            )
+            count += 1
+        return data
+
     def render_plotly(self):
-        fig = go.Figure()
-
-        fig.add_trace(
-            go.Scatter(
-                x=self.embeddings[self.indices_of_normal_neuron_indices, 0],
-                y=self.embeddings[self.indices_of_normal_neuron_indices, 1],
-                mode="markers",
-                name="Normal",
-            )
-        )
-
-        fig.add_trace(
-            go.Scatter(
-                x=self.embeddings[self.indices_of_outlier_neuron_indices, 0],
-                y=self.embeddings[self.indices_of_outlier_neuron_indices, 1],
-                mode="markers",
-                name="Outlier",
-            )
+        fig = go.Figure(
+            data=[
+                go.Scatter(
+                    x=self.embeddings[self.indices_of_normal_neuron_indices, 0],
+                    y=self.embeddings[self.indices_of_normal_neuron_indices, 1],
+                    mode="markers",
+                    name=self.curve_number_mapping[0],
+                ),
+                go.Scatter(
+                    x=self.embeddings[self.indices_of_outlier_neuron_indices, 0],
+                    y=self.embeddings[self.indices_of_outlier_neuron_indices, 1],
+                    mode="markers",
+                    name=self.curve_number_mapping[0],
+                ),
+            ]
         )
 
         fig.update_layout(
@@ -82,12 +106,13 @@ class OutlierVisualizer:
 
     def visualize(self, notebook_mode=False):
         fig = self.render_plotly()
-        fig.update_traces(hoverinfo="none", hovertemplate=None)
 
         if notebook_mode is False:
             app = Dash(__name__)
         else:
             app = JupyterDash(__name__)
+
+        fig.update_traces(hoverinfo="none", hovertemplate=None)
 
         @app.callback(
             Output("graph-tooltip", "show"),
@@ -102,20 +127,29 @@ class OutlierVisualizer:
             # demo only shows the first point, but other points may also be available
             pt = hoverData["points"][0]
             bbox = pt["bbox"]
-            num = pt["pointNumber"]
+            num = pt["pointIndex"]
+            curve_number = pt["curveNumber"]
 
-            from PIL import Image
+            point_type = self.curve_number_mapping[curve_number]
 
-            img_src = Image.open(self.filenames[num])
-            desc = f"Neuron idx: {self.neuron_idx[num]}"
+            if point_type == "normal":
+                idx = np.array(self.neuron_idx)[self.indices_of_normal_neuron_indices][
+                    num
+                ]
+            else:
+                idx = self.outlier_neuron_idx[num]
+
+            img_src = Image.open(self.filenames[self.neuron_idx.index(idx)])
+            desc = f"Neuron idx: {idx}"
 
             children = [
                 html.Div(
                     [
                         html.Img(src=img_src, style={"width": "100%"}),
                         html.P(f"{desc}"),
+                        html.P(f"type: {point_type}"),
                     ],
-                    # style={"width": "200px", "white-space": "normal"},
+                    style={"width": "200px", "white-space": "normal"},
                 )
             ]
 

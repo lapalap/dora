@@ -66,9 +66,7 @@ class Dora:
         if folder_exists == True:
             num_files = len(self.__get_filenames_in_a_folder(folder=name))
             if num_files > 0:
-                warnings.warn(
-                    f"Folder: {name} already exists and has {num_files} items"
-                )
+                UserWarning(f"Folder: {name} already exists and has {num_files} items")
         else:
             os.mkdir(name)
 

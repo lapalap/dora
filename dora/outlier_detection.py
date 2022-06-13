@@ -1,6 +1,14 @@
 import umap
 import numpy as np
+from warnings import filterwarnings
+
 from pyod.models.pca import PCA
+
+filterwarnings(
+    action="ignore",
+    category=DeprecationWarning,
+    message="`np.bool` is a deprecated alias",
+)
 
 OD_METHODS = {
     "PCA": PCA

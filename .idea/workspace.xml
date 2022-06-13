@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d1f3c861-f76a-4e67-ad9f-6eb423aec813" name="Changes" comment="added documentation 📚">
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.rst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/make.bat" beforeDir="false" />
-    </list>
+    <list default="true" id="d1f3c861-f76a-4e67-ad9f-6eb423aec813" name="Changes" comment="added documentation 📚" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -127,7 +122,7 @@
       <workItem from="1654809779972" duration="11128000" />
       <workItem from="1655055152263" duration="145000" />
       <workItem from="1655055301237" duration="4592000" />
-      <workItem from="1655112354776" duration="379000" />
+      <workItem from="1655112354776" duration="743000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <created>1651498228030</created>
@@ -325,7 +320,21 @@
       <option name="project" value="LOCAL" />
       <updated>1655112575444</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="added documentation 📚">
+      <created>1655112810936</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1655112810936</updated>
+    </task>
+    <task id="LOCAL-00030" summary="added documentation 📚">
+      <created>1655113042809</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1655113042809</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -22,9 +22,10 @@ d.generate_signals(
     neuron_idx=neuron_indices,
     layer=model.avgpool,
     objective_fn=ChannelObjective(),
+    lr=18e-3,
     width=224,
     height=224,
-    iters=200,
+    iters=90,
     experiment_name="model.avgpool",
     overwrite_experiment=True,  ## will still use what already exists if generation params are same
 )
@@ -43,3 +44,11 @@ print(result.outlier_neuron_idx)  ## list of neuron indices which were outliers
 
 ## runs an interactive dash app on http://127.0.0.1:8050/
 result.visualize()
+
+## get outliers
+outliers = result.get_outlier_neurons()
+print(outliers)
+
+## get normal neurons
+normal_neurons = result.get_outlier_neurons()
+print(normal_neurons)

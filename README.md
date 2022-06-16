@@ -4,7 +4,8 @@
 
 <div align="center"><h1>DORA: Data-agnOstic Representation Analysis</h1>
 <h5>A toolkit to explore the Representation Spaces of Deep Neural Networks</h5>
-<h6>PyTorch version</h6></div>
+<h6>PyTorch version</h6>
+<h5 href="https://arxiv.org/abs/2206.04530">Paper link</h5></div>
 <div align="center">
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lapalap/dora/blob/master/examples/hello_dora.ipynb)
@@ -21,13 +22,24 @@
 </div>
 <hr />
 
+Data-agnOstic Representation analysis – *DORA* – is the automatic framework for inspecting the representation space of Deep Neural Networks for infected neurons (i.e. neurons that are representing spurious or artifactual concepts).
+Independent of data, for any given DL model DORA, allows to automatically detect anomalous representations, that bear a high risk of learning unintended spurious concepts deviating from the desired decision-making policy.
+Infected representations, found by DORA, can also be used as artifact detectors when applied to any given dataset – allowing furthermore an automatic detection and successive cleaning of infected data points.
+
 <div align="center">
 <img src="./assets/images/DORA.svg" height="350"/>
+</div>
+
+With DORA user can investigate networks for presence of artifactual representations. As an example, DORA was able to found cluster of unintended (spurious) Chinese-character detector in representations from standard ImageNet trained networks.
+
+<div align="center">
+<img src="./assets/images/example.svg" height="550"/>
 </div>
 
 <div align="left">
 <img src="./assets/images/Installation.svg" height="32"/>
 </div>
+<hr />
 
 You can it via pip as shown below:
 ```
@@ -103,26 +115,17 @@ result.visualize()
 
 
 
-<hr />
-<div align="left">
-<img src="./assets/images/Contributing.svg" height="32"/>
-</div>
-<hr />
 <div align="left">
 <img src="./assets/images/Citation.svg" height="32"/>
 </div>
 <hr />
 
 ```bibtex
-@misc{https://doi.org/10.48550/arxiv.2206.04530,
-  doi = {10.48550/ARXIV.2206.04530},
-  url = {https://arxiv.org/abs/2206.04530},
-  author = {Bykov, Kirill and Deb, Mayukh and Grinwald, Dennis and Müller, Klaus-Robert and Höhne, Marina M. -C.},
-  keywords = {Machine Learning (cs.LG), Artificial Intelligence (cs.AI), Computer Vision and Pattern Recognition (cs.CV), Machine Learning (stat.ML), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  title = {DORA: Exploring outlier representations in Deep Neural Networks},
-  publisher = {arXiv},
-  year = {2022},
-  copyright = {arXiv.org perpetual, non-exclusive license}
+@article{bykov2022dora,
+  title={DORA: Exploring outlier representations in Deep Neural Networks},
+  author={Bykov, Kirill and Deb, Mayukh and Grinwald, Dennis and M{\"u}ller, Klaus-Robert and H{\"o}hne, Marina M-C},
+  journal={arXiv preprint arXiv:2206.04530},
+  year={2022}
 }
 ```
 

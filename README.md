@@ -4,7 +4,8 @@
 
 <div align="center"><h1>DORA: Data-agnOstic Representation Analysis</h1>
 <h5>A toolkit to explore the Representation Spaces of Deep Neural Networks</h5>
-<h6>PyTorch version</h6></div>
+<h6>PyTorch version</h6>
+<h5 href="https://arxiv.org/abs/2206.04530">Paper link</h5></div>
 <div align="center">
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lapalap/dora/blob/dev/examples/hello_dora.ipynb)
@@ -21,8 +22,18 @@
 </div>
 <hr />
 
+Data-agnOstic Representation analysis – *DORA* – is the automatic framework for inspecting the representation space of Deep Neural Networks for infected neurons (i.e. neurons that are representing spurious or artifactual concepts).
+Independent of data, for any given DL model DORA, allows to automatically detect anomalous representations, that bear a high risk of learning unintended spurious concepts deviating from the desired decision-making policy.
+Infected representations, found by DORA, can also be used as artifact detectors when applied to any given dataset – allowing furthermore an automatic detection and successive cleaning of infected data points.
+
 <div align="center">
 <img src="./assets/images/DORA.svg" height="350"/>
+</div>
+
+With DORA user can investigate networks for presence of artifactual representations. As an example, DORA was able to found cluster of unintended (spurious) Chinese-character detector in representations from standard ImageNet trained networks.
+
+<div align="center">
+<img src="./assets/images/example.svg" height="550"/>
 </div>
 
 <div align="left">
@@ -103,11 +114,6 @@ result.visualize()
 
 
 
-<hr />
-<div align="left">
-<img src="./assets/images/Contributing.svg" height="32"/>
-</div>
-<hr />
 <div align="left">
 <img src="./assets/images/Citation.svg" height="32"/>
 </div>

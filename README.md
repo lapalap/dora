@@ -19,6 +19,8 @@
 
 </div>
 
+
+<br>
 <div align="left">
 <img src="./assets/images/About.svg" height="32"/>
 </div>
@@ -32,14 +34,16 @@ Infected representations, found by DORA, can also be used as artifact detectors 
 <img src="./assets/images/DORA.svg" height="350"/>
 <figcaption>Fig.1 <b>DORA</b> – <em> Data-agnOstic Representation Analysis </em> in three steps: 1. Generation of s-AMS for a set of neurons (left), 2. Collecting the activations of the generated s-AMS of step 1 (middle), 3. Finding semantic outliers in the activation space (right).</figcaption>
 </div>
-
+<br>
 With DORA user can investigate networks for presence of artifactual representations. As an example, DORA was able to found cluster of unintended (spurious) Chinese-character detector in representations from standard ImageNet trained networks.
 
 <div align="center">
 <img src="./assets/images/example.svg" height="550"/>
-<figcaption>Fig.2 <b>Outlier Detection with DORA for ResNet18 pre-trained on ImageNet.</b> We investigate the last convolutional layer with DORA, consisting of 512 neurons, for which we compute the s-AMS respectively (DORA step 1). On the left, the activation vectors of all 512 s-AMS (DORA step 2) are plotted along with the first two UMAP components, where the highest outliers found by DORA (DORA step 3), neuron 154 and neuron 314 are marked in orange along with their closest neighbors, marked in light orange. The corresponding s-AMS for each of the marked neurons are shown in the middle. From the s-AMS of the outlier neuron 154 found by DORA, we can observe symbolic patterns, resembling Chinese symbols, represented by the neuron as well as by its closest neighbor neurons. Furthermore, on the right, each neuron is used as a detector for data points with added Chinese watermark symbols, where the performances are reported as ROC curves. We can observe that the outlier neuron 154 exhibits the highest AUC value (green curve), followed by its nearest neighbors.</figcaption>
+<figcaption>Fig.2 <b>Outlier Detection with DORA for ResNet18 pre-trained on ImageNet.</b> We investigate the last convolutional layer with DORA, consisting of 512 neurons, for which we compute the s-AMS respectively (DORA step 1). On the left, the activation vectors of all 512 s-AMS (DORA step 2) are plotted along with the first two UMAP components, where the highest outliers found by DORA (DORA step 3), neuron 154 and neuron 314 are marked in orange along with their closest neighbors, marked in light orange. The corresponding s-AMS for each of the marked neurons are shown in the middle. From the s-AMS of the outlier neuron 154 found by DORA, we can observe symbolic patterns, resembling Chinese symbols, represented by the neuron as well as by its closest neighbor neurons. Furthermore, on the right, each neuron is used as a detector for data points with added Chinese watermark symbols, where the performances are reported as ROC curves. We can observe that the outlier neuron 154 exhibits the highest AUC value (green curve), followed by its nearest neighbors.
+</figcaption>
 </div>
 
+<br>
 <div align="left">
 <img src="./assets/images/Installation.svg" height="32"/>
 </div>
@@ -49,7 +53,7 @@ You can it via pip as shown below:
 ```
 pip install git+https://github.com/lapalap/dora.git
 ```
-
+<br>
 <div align="left">
 <img src="./assets/images/Getting%20started.svg" height="32"/>
 </div>
@@ -118,7 +122,7 @@ result.visualize()
 ```
 
 
-
+<br>
 <div align="left">
 <img src="./assets/images/Citation.svg" height="32"/>
 </div>
@@ -132,7 +136,7 @@ result.visualize()
   year={2022}
 }
 ```
-
+<br>
 <div align="left">
 <img src="./assets/images/License.svg" height="32"/>
 </div>

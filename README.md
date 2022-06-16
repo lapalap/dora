@@ -5,8 +5,9 @@
 <div align="center"><h1>DORA: Data-agnOstic Representation Analysis</h1>
 <h5>A toolkit to explore the Representation Spaces of Deep Neural Networks</h5>
 <h6>PyTorch version</h6>
-<h5 href="https://arxiv.org/abs/2206.04530">Paper link</h5></div>
 <div align="center">
+
+[📑 Paper link](https://arxiv.org/abs/2206.04530)
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lapalap/dora/blob/master/examples/hello_dora.ipynb)
 [![tests](https://github.com/lapalap/dora/actions/workflows/main.yml/badge.svg)](https://github.com/lapalap/dora/actions/workflows/main.yml)

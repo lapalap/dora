@@ -39,6 +39,7 @@ With DORA user can investigate networks for presence of artifactual representati
 <div align="left">
 <img src="./assets/images/Installation.svg" height="32"/>
 </div>
+<hr />
 
 You can it via pip as shown below:
 ```
@@ -120,15 +121,11 @@ result.visualize()
 <hr />
 
 ```bibtex
-@misc{https://doi.org/10.48550/arxiv.2206.04530,
-  doi = {10.48550/ARXIV.2206.04530},
-  url = {https://arxiv.org/abs/2206.04530},
-  author = {Bykov, Kirill and Deb, Mayukh and Grinwald, Dennis and Müller, Klaus-Robert and Höhne, Marina M. -C.},
-  keywords = {Machine Learning (cs.LG), Artificial Intelligence (cs.AI), Computer Vision and Pattern Recognition (cs.CV), Machine Learning (stat.ML), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  title = {DORA: Exploring outlier representations in Deep Neural Networks},
-  publisher = {arXiv},
-  year = {2022},
-  copyright = {arXiv.org perpetual, non-exclusive license}
+@article{bykov2022dora,
+  title={DORA: Exploring outlier representations in Deep Neural Networks},
+  author={Bykov, Kirill and Deb, Mayukh and Grinwald, Dennis and M{\"u}ller, Klaus-Robert and H{\"o}hne, Marina M-C},
+  journal={arXiv preprint arXiv:2206.04530},
+  year={2022}
 }
 ```
 

@@ -30,6 +30,8 @@ Data-agnOstic Representation analysis – *DORA* – is the automatic framework 
 Independent of data, for any given DL model DORA, allows to automatically detect anomalous representations, that bear a high risk of learning unintended spurious concepts deviating from the desired decision-making policy.
 Infected representations, found by DORA, can also be used as artifact detectors when applied to any given dataset – allowing furthermore an automatic detection and successive cleaning of infected data points.
 
+DORA is based on the idea of using the network itself for extracting semantic information contained in the synthetic Activation Maximisation Signals – (s-AMS), and employing this information further to analyze the representation space and identify outlier representations. Using intrinsic correlations between representations, contained in the encoding of s-AMS, we can reveal anomalous concepts that are promising candidates for being infected with unintended and potentially poisonous concepts.
+
 <div align="center">
 <img src="./assets/images/DORA.svg" height="350"/>
 <figcaption>Fig.1 <b>DORA</b> – <em> Data-agnOstic Representation Analysis </em> in three steps: 1. Generation of s-AMS for a set of neurons (left), 2. Collecting the activations of the generated s-AMS of step 1 (middle), 3. Finding semantic outliers in the activation space (right).</figcaption>

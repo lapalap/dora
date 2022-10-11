@@ -31,3 +31,17 @@ class ChannelObjective(Objective):
     def objective(self, layer_outputs):
         loss = layer_outputs[self.layer_number][self.channel_number].mean()
         return -loss
+
+class ClassObjective(Objective):
+    def __init__(self, layer_number=0, class_number=0) -> None:
+        """Objective function builder for class optimizations.
+        "Class" is the same as "logit" in this context.
+        Args:
+            layer_number (int, optional): the layer index whose outputs are to be used for the objective. Defaults to 0.
+            class_number (int, optional): the channel index/neuron index to be optimized. Defaults to 0.
+        """
+        super().__init__(layer_number=layer_number, channel_number=class_number)
+
+    def objective(self, layer_outputs):
+        loss = layer_outputs[self.layer_number][self.class_number]
+        return -loss

@@ -8,6 +8,7 @@ import torch.nn as nn
 from tqdm import tqdm
 from PIL import Image
 from torch_dreams.dreamer import dreamer
+from torch_dreams.auto_image_param import BaseImageParam, auto_image_param
 import torchvision.transforms as transforms
 
 from typing import Callable, Union
@@ -25,7 +26,6 @@ class Dora:
     def __init__(
         self,
         model: nn.Module,
-        image_transforms: Callable,
         storage_dir=".dora/",
         device="cpu",
     ):
@@ -44,17 +44,14 @@ class Dora:
 
         self.device = device
         self.model = model
-        self.image_transforms = image_transforms
-        self.dreamer = dreamer(model=self.model, quiet=True, device=device)
+
+        # TODO: add transforms
 
         if storage_dir[-1] == "/":
             storage_dir = storage_dir[:-1]
 
         self.storage_dir = storage_dir
-
         self.make_folder_if_it_doesnt_exist(name=storage_dir)
-
-        self.results = {}
 
     def make_folder_if_it_doesnt_exist(self, name):
 
@@ -119,6 +116,7 @@ class Dora:
         weight_decay,
         grad_clip,
     ):
+        #TODO add information about image_parameter and transformations
         data = {
             "experiment_name": experiment_name,
             "neuron_idx": neuron_idx,
@@ -161,6 +159,8 @@ class Dora:
         width=256,
         height=256,
         iters=150,
+        image_parameter = None,
+        image_transforms = None,
         lr=9e-3,
         rotate_degrees=15,
         scale_max=1.2,
@@ -181,6 +181,16 @@ class Dora:
         ## config exists and matches - skip existing neurons
         ## config exists but does not match - overwrite existing neurons
         ## no config found - nothing
+
+        local_dreamer = dreamer(model=self.model, quiet=True, device=self.device)
+        if image_transforms is not None:
+            local_dreamer.set_custom_transforms(image_transforms)
+        if image_parameter is None:
+            image_parameter = auto_image_param(height= height,
+                                               width = width,
+                                               device = self.device,
+                                               standard_deviation = 0.01)
+
         overwrite_neurons = self.check_and_write_config(
             experiment_name=experiment_name,
             neuron_idx=neuron_idx,
@@ -214,9 +224,7 @@ class Dora:
         )
         print(f"Experiment name: {experiment_name}")
         experiment_folder = sAMS_folder + "/" + experiment_name
-        self.results[experiment_name] = {}
 
-        # TODO: check if experiment folder exists (well, it shouldn't, but still)
         experiment_folder_exists = os.path.exists(experiment_folder)
 
         if not experiment_folder_exists:
@@ -248,14 +256,10 @@ class Dora:
                 )
                 image = Image.open(filename)
 
-                # TODO: maybe not load all s-AMS to the memory -- only save them, and load?
-                self.results[experiment_name][idx] = Result(
-                    s_ams=self.image_transforms(image).unsqueeze(0),
-                    image=image,
-                    encoding=None,
-                )
+                continue
             else:
-                image_param = self.dreamer.render(
+                image_param = local_dreamer.render(
+                    image_parameter=image_parameter,
                     layers=[layer],
                     width=width,
                     height=height,
@@ -271,84 +275,4 @@ class Dora:
                     grad_clip=grad_clip,
                 )
 
-                self.results[experiment_name][idx] = Result(
-                    s_ams=image_param.to_chw_tensor().unsqueeze(0),
-                    image=transforms.ToPILImage()(image_param.to_chw_tensor()),
-                    encoding=None,
-                )
-
                 image_param.save(filename=filename)
-
-        # TODO: add logs to the experiment folder -- like hyperparameters information and etc..
-
-        # self.collect_encodings(neuron_idx=neuron_idx)
-        # self.run_outlier_detection(neuron_idx=neuron_idx)
-
-    def load_results_from_folder(self, folder):
-        raise NotImplementedError
-
-    @torch.no_grad()
-    def collect_encodings(self, layer, experiment_name, neuron_idx=None):
-
-        # if neuron_idx is None, iterate over all results
-        if neuron_idx is None:
-            neuron_idx = list(self.results[experiment_name].keys())
-
-        hook = ForwardHook(module=layer)
-
-        for idx in tqdm(neuron_idx, desc="Collecting encodings"):
-            input_tensor = self.results[experiment_name][idx].s_ams
-            y = self.model.forward(input_tensor.to(self.device))
-
-            self.results[experiment_name][idx].encoding = hook.output
-
-        hook.close()
-
-    def run_outlier_detection(
-        self,
-        experiment_name,
-        neuron_idx=None,
-        activation_reduction_fn: Callable = get_mean_along_last_2_dims,
-        method="PCA",
-        outliers_fraction=0.05,
-        random_state=1,
-    ):
-
-        outlier_detector = OutlierDetector(
-            name=method,
-            outliers_fraction=outliers_fraction,
-            random_state=random_state,
-        )
-
-        # if neuron_idx is None, iterate over all results
-        if neuron_idx is None:
-            neuron_idx = list(self.results[experiment_name].keys())
-
-        encodings = torch.cat(
-            [self.results[experiment_name][i].encoding for i in neuron_idx], dim=0
-        )
-        assert (
-            encodings.ndim == 4
-        ), f"Expected activations to have 4 dimensions [N, C, *, *] but got {encodings.ndim}"
-
-        reduced_encodings = activation_reduction_fn(encodings)
-
-        ## returns indices
-        result = outlier_detector.run(activations=reduced_encodings)
-        result_neuron_indices = np.array(neuron_idx)[result]
-
-        return OutlierVisualizer(
-            embeddings=outlier_detector.embeddings,
-            outlier_neuron_idx=result_neuron_indices,
-            neuron_idx=neuron_idx,
-            experiment_name=experiment_name,
-            storage_dir=self.storage_dir,
-        )
-
-    def show_results(self, experiment_name):
-        """Generates a plotly plot from the results. Useful to see the outliers in a 2D space.
-
-        Raises:
-            NotImplementedError: _description_
-        """
-        raise NotImplementedError

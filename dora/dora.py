@@ -1,5 +1,6 @@
 import os
 import json
+import glob
 import torch
 import warnings
 import time
@@ -18,8 +19,6 @@ from .forward_hook import ForwardHook
 from .outlier_detection import OutlierDetector
 from .reduction_methods import get_mean_along_last_2_dims
 from .visualizer import OutlierVisualizer
-
-warnings.simplefilter("default")
 
 
 class Dora:
@@ -103,6 +102,8 @@ class Dora:
     def check_and_write_config(
         self,
         experiment_name,
+        only_maximization,
+        num_samples,
         neuron_idx,
         width,
         height,
@@ -119,6 +120,8 @@ class Dora:
         #TODO add information about image_parameter and transformations
         data = {
             "experiment_name": experiment_name,
+            "only_maximization": only_maximization,
+            "num_samples": num_samples,
             "neuron_idx": neuron_idx,
             "width": width,
             "height": height,
@@ -156,6 +159,8 @@ class Dora:
         objective_fn: Callable,
         progress: bool = True,
         neuron_idx: Union[list, int] = None,
+        only_maximization: bool = False,
+        num_samples=1,
         width=256,
         height=256,
         iters=150,
@@ -193,6 +198,8 @@ class Dora:
 
         overwrite_neurons = self.check_and_write_config(
             experiment_name=experiment_name,
+            only_maximization = str(only_maximization),
+            num_samples=num_samples,
             neuron_idx=neuron_idx,
             width=width,
             height=height,
@@ -243,36 +250,85 @@ class Dora:
                 len(neuron_idx) > 0
             ), "Expected neuron_idx list to have a non zero length"
 
+        # if 'only maximization' we generate only Activation-Maximisation signal
+        if only_maximization:
+            signatures = ['+']
+        else:
+            signatures = ['+', '-']
+
         for idx in tqdm(neuron_idx, disable=not (progress), desc="Generating s-AMS"):
+            for idx_sample in range(num_samples):
+                for sign in signatures:
+                    filename = experiment_folder + "/" + f"{idx}_{idx_sample}{sign}.jpg"
 
-            filename = experiment_folder + "/" + f"{idx}.jpg"
+                    if isinstance(objective_fn, ChannelObjective):
+                        objective_fn.channel_number = idx
 
-            if isinstance(objective_fn, ChannelObjective):
-                objective_fn.channel_number = idx
+                    if overwrite_neurons == False and os.path.exists(filename) == True:
+                        print(
+                            f"skippping neuron index:{idx}, sample {idx_smaple}, sign {sign}  because it already exists here: {filename} with the same generation config"
+                        )
+                        image = Image.open(filename)
 
-            if overwrite_neurons == False and os.path.exists(filename) == True:
-                print(
-                    f"skippping neuron index:{idx} because it already exists here: {filename} with the same generation config"
-                )
-                image = Image.open(filename)
+                        continue
+                    else:
+                        if sign == '+':
+                            objective_fn.constant = 1
+                        elif sign == '-':
+                            objective_fn.constant = -1
 
-                continue
-            else:
-                image_param = local_dreamer.render(
-                    image_parameter=image_parameter,
-                    layers=[layer],
-                    width=width,
-                    height=height,
-                    iters=iters,
-                    lr=lr,
-                    rotate_degrees=rotate_degrees,
-                    scale_max=scale_max,
-                    scale_min=scale_min,
-                    translate_x=translate_x,
-                    translate_y=translate_y,
-                    custom_func=objective_fn,
-                    weight_decay=weight_decay,
-                    grad_clip=grad_clip,
-                )
+                        image_param = local_dreamer.render(
+                            image_parameter=image_parameter,
+                            layers=[layer],
+                            width=width,
+                            height=height,
+                            iters=iters,
+                            lr=lr,
+                            rotate_degrees=rotate_degrees,
+                            scale_max=scale_max,
+                            scale_min=scale_min,
+                            translate_x=translate_x,
+                            translate_y=translate_y,
+                            custom_func=objective_fn,
+                            weight_decay=weight_decay,
+                            grad_clip=grad_clip,
+                        )
 
-                image_param.save(filename=filename)
+                        image_param.save(filename=filename)
+
+
+class SignalDataset(torch.utils.data.Dataset):
+    """Custom dataset class for loading the signals"""
+
+    def __init__(self, root_dir, transform=None):
+        """
+        #TODO fill this
+        """
+        self.root_dir = root_dir
+        self.transform = transform
+
+        self.metainfo = {}
+
+        for x in glob.glob(f"{root_dir}/*.jpg"):
+            x = os.path.basename(x)
+            # [neuron_id, sample_id, sign]
+            self.metainfo[x] = [int(x[:-5].split('_')[0]),int(x[:-5].split('_')[1]), x[-5]]
+
+
+    def __len__(self):
+        return len(self.metainfo.keys())
+
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
+        image_name = self.metainfo.keys()[idx]
+
+        img_name = os.path.join(self.root_dir,
+                                image_name)
+        image = io.imread(img_name)
+
+        if self.transform:
+            sample = self.transform(image)
+
+        return sample, self.metainfo[img_name]

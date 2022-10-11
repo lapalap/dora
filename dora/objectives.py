@@ -9,9 +9,10 @@ class Objective:
         """
         self.layer_number = layer_number
         self.channel_number = 0
+        self.constant = 1.
 
     def __call__(self, layer_outputs):
-        return self.objective(layer_outputs=layer_outputs)
+        return self.constant * self.objective(layer_outputs=layer_outputs)
 
     def objective(self, layer_outputs):
         raise NotImplementedError

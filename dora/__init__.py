@@ -1,1 +1,1 @@
-from .dora import Dora
+from .dora import Dora, SignalDataset

@@ -10,21 +10,25 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 neuron_indices = [i for i in range(5, 7)]
 
 model = models.resnet18(pretrained=True).eval().to(device)
-d = Dora(model=model, device=device)
+# d = Dora(model=model, device=device)
+#
+# d.generate_signals(
+#     neuron_idx=neuron_indices,
+#     num_samples = 5,
+#     layer=model.avgpool,
+#     image_parameter = None,
+#     image_transforms = transforms.RandomRotation((-15, 15)),
+#     objective_fn=ChannelObjective(),
+#     lr=18e-3,
+#     width=224,
+#     height=224,
+#     iters=90,
+#     experiment_name="model.avgpool",
+#     overwrite_experiment=True,  ## will still use what already exists if generation params are same
+# )
+from dora import SignalDataset
 
-d.generate_signals(
-    neuron_idx=neuron_indices,
-    layer=model.avgpool,
-    image_parameter = None,
-    image_transforms = transforms.RandomRotation((-15, 15)),
-    objective_fn=ChannelObjective(),
-    lr=18e-3,
-    width=224,
-    height=224,
-    iters=90,
-    experiment_name="model.avgpool",
-    overwrite_experiment=True,  ## will still use what already exists if generation params are same
-)
+data = SignalDataset('/Users/kirillbykov/Documents/GitHub/dora/.dora/sAMS/model.avgpool')
 
 
 #

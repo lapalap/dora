@@ -12,22 +12,6 @@ neuron_indices = [i for i in range(5, 6)]
 model = models.resnet18(pretrained=True).eval().to(device)
 d = Dora(model=model, device=device)
 
-# lucent.optvis.transform.pad(2, mode='constant', constant_value=.5),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.jitter(jttr),
-#               lucent.optvis.transform.random_scale([0.995**n for n in range(-5,80)] + [0.998**n for n in 2*list(range(20,40))]),
-#               lucent.optvis.transform.random_rotate(list(range(-20,20))+list(range(-10,10))+list(range(-5,5))+5*[0]),
-#               lucent.optvis.transform.jitter(2),
-#               torchvision.transforms.RandomCrop((224, 224), padding=None, pad_if_needed=True, fill=0, padding_mode='constant')
-
 d.generate_signals(
     neuron_idx=neuron_indices,
     num_samples = 1,
@@ -45,7 +29,7 @@ d.generate_signals(
                                                                  fill=0,
                                                                  padding_mode='constant')]),
     objective_fn=ChannelObjective(),
-    lr=18e-3,
+    lr=2e-2,
     width=224,
     height=224,
     iters=100,

@@ -11,6 +11,7 @@ from PIL import Image
 from torch_dreams.dreamer import dreamer
 from torch_dreams.auto_image_param import BaseImageParam, auto_image_param
 import torchvision.transforms as transforms
+from skimage import io, transform
 
 from typing import Callable, Union
 from .objectives import ChannelObjective
@@ -165,13 +166,18 @@ class Dora:
         height=256,
         iters=150,
         image_parameter = None,
-        image_transforms = None,
+        image_transforms = transforms.Compose([transforms.Pad(2, fill=.5, padding_mode='constant'),
+                                           transforms.RandomAffine((-15,15),
+                                                                   translate=(0, 0.1),
+                                                                   scale=(0.85, 1.2),
+                                                                   shear=(-15,15),
+                                                                   fill=0.5),
+                                           transforms.RandomCrop((224, 224),
+                                                                 padding=None,
+                                                                 pad_if_needed=True,
+                                                                 fill=0,
+                                                                 padding_mode='constant')]),
         lr=9e-3,
-        rotate_degrees=15,
-        scale_max=1.2,
-        scale_min=0.8,
-        translate_x=0.2,
-        translate_y=0.2,
         weight_decay=1e-2,
         grad_clip=1.0,
         overwrite_experiment=False,
@@ -266,7 +272,7 @@ class Dora:
 
                     if overwrite_neurons == False and os.path.exists(filename) == True:
                         print(
-                            f"skippping neuron index:{idx}, sample {idx_smaple}, sign {sign}  because it already exists here: {filename} with the same generation config"
+                            f"skippping neuron index:{idx}, sample {idx_sample}, sign {sign}  because it already exists here: {filename} with the same generation config"
                         )
                         image = Image.open(filename)
 
@@ -300,12 +306,15 @@ class Dora:
 class SignalDataset(torch.utils.data.Dataset):
     """Custom dataset class for loading the signals"""
 
-    def __init__(self, root_dir, transform=None):
+    def __init__(self, root_dir, N_r, N_s, transform=None):
         """
         #TODO fill this
         """
         self.root_dir = root_dir
         self.transform = transform
+
+        self.N_r = N_r
+        self.N_s = N_s
 
         self.metainfo = {}
 
@@ -313,6 +322,8 @@ class SignalDataset(torch.utils.data.Dataset):
             x = os.path.basename(x)
             # [neuron_id, sample_id, sign]
             self.metainfo[x] = [int(x[:-5].split('_')[0]),int(x[:-5].split('_')[1]), x[-5]]
+
+        assert self.N_r*self.N_s*2 == len(self.metainfo.keys())
 
 
     def __len__(self):
@@ -322,13 +333,33 @@ class SignalDataset(torch.utils.data.Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        image_name = self.metainfo.keys()[idx]
+        img_name = list(self.metainfo.keys())[idx]
 
-        img_name = os.path.join(self.root_dir,
-                                image_name)
-        image = io.imread(img_name)
+        img_path = os.path.join(self.root_dir,
+                                img_name)
+        image = io.imread(img_path)
 
         if self.transform:
             sample = self.transform(image)
 
         return sample, self.metainfo[img_name]
+
+
+def compute_distance(A: torch.Tensor):
+    """
+    A: tensor of shape [N_r, N_s, N_r,  2]
+    """
+    assert len(A.shape) == 4
+
+    A = A.mean(axis = 1)
+
+    Beta = A[:, :,0] - A[:, :, 1]
+    Beta = Beta / torch.diagonal(Beta)
+
+    return Beta * torch.sqrt(Beta.T/Beta)
+
+
+
+
+
+

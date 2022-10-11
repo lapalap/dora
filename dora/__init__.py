@@ -1,1 +1,1 @@
-from .dora import Dora, SignalDataset
+from .dora import Dora, SignalDataset, compute_distance

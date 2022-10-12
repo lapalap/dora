@@ -356,7 +356,7 @@ def compute_distance(A: torch.Tensor):
     """
     assert len(A.shape) == 4
 
-    A = A.mean(axis = 1)
+    A = A.mean(axis = 2)
 
     Beta = A[:, :,0] - A[:, :, 1]
     Beta = Beta / torch.diagonal(Beta)

@@ -1,3 +1,4 @@
+import torch
 from torch_dreams.auto_image_param import BaseImageParam
 from torch_dreams.utils import init_image_param, normalize
 

@@ -336,7 +336,7 @@ class Dora:
             )
 
             for i, [idx, idx_sample, sign] in enumerate(task_list[counter:counter + internal_batch_size]):
-                result_batch[i].save(experiment_folder + "/" + f"{idx}_{idx_sample}{sign}.jpg")
+                image_param[i].save(experiment_folder + "/" + f"{idx}_{idx_sample}{sign}.jpg")
 
             counter += internal_batch_size
 

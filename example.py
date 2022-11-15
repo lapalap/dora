@@ -17,6 +17,7 @@ d.generate_signals(
     num_samples = 1,
     layer=model.fc,
     image_parameter = None,
+    batch_size = 2,
     image_transforms = transforms.Compose([transforms.Pad(2, fill=.5, padding_mode='constant'),
                                            transforms.RandomAffine((-15,15),
                                                                    translate=(0, 0.1),
@@ -45,23 +46,23 @@ data = SignalDataset('/Users/kirillbykov/Documents/GitHub/dora/.dora/sAMS/model.
                                                      transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                                                           std=[0.229, 0.224, 0.225])])
                      )
-
-
-A = torch.zeros([2, 5, 2, 2])
-with torch.no_grad():
-    for i in data:
-        print(i[0].shape)
-        r = i[1][0] - 5
-        s = i[1][1]
-        sign = 0 if i[1][2] == "+" else 1
-        out = model(i[0].view([1,3,224,224]))[0][5:7]
-        A[r, s, sign, :] = out
-
-print(A)
-
-from dora import compute_distance
-
-print(compute_distance(A))
+# 
+# 
+# A = torch.zeros([2, 5, 2, 2])
+# with torch.no_grad():
+#     for i in data:
+#         print(i[0].shape)
+#         r = i[1][0] - 5
+#         s = i[1][1]
+#         sign = 0 if i[1][2] == "+" else 1
+#         out = model(i[0].view([1,3,224,224]))[0][5:7]
+#         A[r, s, sign, :] = out
+# 
+# print(A)
+# 
+# from dora import compute_distance
+# 
+# print(compute_distance(A))
 
 
 #

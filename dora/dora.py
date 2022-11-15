@@ -8,8 +8,12 @@ import numpy as np
 import torch.nn as nn
 from tqdm import tqdm
 from PIL import Image
-from torch_dreams.dreamer import dreamer
-from torch_dreams.auto_image_param import BaseImageParam, auto_image_param
+
+from torch_dreams.dreamer import Dreamer
+from torch_dreams.auto_image_param import BaseImageParam, AutoImageParam
+from torch_dreams.batched_objective import BatchedObjective
+from torch_dreams.batched_image_param import BatchedAutoImageParam
+
 import torchvision.transforms as transforms
 from skimage import io, transform
 
@@ -160,7 +164,8 @@ class Dora:
         objective_fn: Callable,
         progress: bool = True,
         neuron_idx: Union[list, int] = None,
-        only_maximization: bool = False,
+        only_maximization: bool = True,
+        batch_size = 16,
         num_samples=1,
         width=256,
         height=256,
@@ -198,15 +203,16 @@ class Dora:
         ## config exists but does not match - overwrite existing neurons
         ## no config found - nothing
 
-        local_dreamer = dreamer(model=self.model, quiet=True, device=self.device)
+        local_dreamer = Dreamer(model=self.model, quiet=True, device=self.device)
         if image_transforms is not None:
             local_dreamer.set_custom_transforms(image_transforms)
         if image_parameter is None:
-            image_parameter = auto_image_param(height= height,
+            image_parameter = AutoImageParam(height= height,
                                                width = width,
                                                device = self.device,
                                                standard_deviation = 0.01)
-
+        
+        #TODO update batch procedure
         overwrite_neurons = self.check_and_write_config(
             experiment_name=experiment_name,
             only_maximization = str(only_maximization),
@@ -266,46 +272,73 @@ class Dora:
             signatures = ['+']
         else:
             signatures = ['+', '-']
+            
+            
+        task_list = [[idx, idx_sample, sign] for idx in neuron_idx for idx_sample in range(num_samples) for sign in signatures ]
 
-        for idx in tqdm(neuron_idx, disable=not (progress), desc="Generating s-AMS"):
-            for idx_sample in range(num_samples):
-                for sign in signatures:
-                    filename = experiment_folder + "/" + f"{idx}_{idx_sample}{sign}.jpg"
+        ## objective generator for each neuron
+        def make_custom_func(layer_number=0, channel_number=0, maximisation = True):
+            if maximisation:
+                constant = 1.
+            else:
+                constant = -1.
+            def custom_func(layer_outputs):
+                loss = layer_outputs[layer_number][channel_number].norm()
+                return -constant*loss
 
-                    if isinstance(objective_fn, ChannelObjective):
-                        objective_fn.channel_number = idx
+            return custom_func
 
-                    if overwrite_neurons == False and os.path.exists(filename) == True:
-                        print(
-                            f"skippping neuron index:{idx}, sample {idx_sample}, sign {sign}  because it already exists here: {filename} with the same generation config"
-                        )
-                        image = Image.open(filename)
+        counter = 0
+        while tqdm(counter < len(task_list), disable=not (progress), desc="Generating s-AMS"):
 
-                        continue
-                    else:
-                        if sign == '+':
-                            objective_fn.constant = 1
-                        elif sign == '-':
-                            objective_fn.constant = -1
+            internal_batch_size = min(batch_size, len(task_list) - counter)
+            batched_objective = BatchedObjective(
+                objectives=[make_custom_func(channel_number=idx,
+                                             maximisation=sign == '+') for idx, idx_sample, sign in task_list[counter:counter + internal_batch_size]]
+            )
 
-                        image_param = local_dreamer.render(
-                            image_parameter=image_parameter,
-                            layers=[layer],
-                            width=width,
-                            height=height,
-                            iters=iters,
-                            lr=lr,
-                            rotate_degrees=rotate_degrees,
-                            scale_max=scale_max,
-                            scale_min=scale_min,
-                            translate_x=translate_x,
-                            translate_y=translate_y,
-                            custom_func=objective_fn,
-                            weight_decay=weight_decay,
-                            grad_clip=grad_clip,
-                        )
+            # if overwrite_neurons == False and os.path.exists(filename) == True:
+            #     # print(
+            #     #     f"skippping neuron index:{idx}, sample {idx_sample}, sign {sign}  because it already exists here: {filename} with the same generation config"
+            #     # )
+            #     # image = Image.open(filename)
+            #
+            #     continue
+            # else:
+            #     # if sign == '+':
+            #     #     objective_fn.constant = 1
+            #     # elif sign == '-':
+            #     #     objective_fn.constant = -1
 
-                        image_param.save(filename=filename)
+            ## set up a batch of trainable image parameters
+            bap = BatchedAutoImageParam(
+                batch_size=internal_batch_size,
+                width=width,
+                height=height,
+                standard_deviation=0.01
+            )
+
+            image_param = local_dreamer.render(
+                image_parameter=bap,
+                layers=[layer],
+                width=width,
+                height=height,
+                iters=iters,
+                lr=lr,
+                rotate_degrees=rotate_degrees,
+                scale_max=scale_max,
+                scale_min=scale_min,
+                translate_x=translate_x,
+                translate_y=translate_y,
+                custom_func=batched_objective,
+                weight_decay=weight_decay,
+                grad_clip=grad_clip,
+            )
+
+            for i, [idx, idx_sample, sign] in task_list[counter:counter + internal_batch_size]:
+                result_batch[i].save(experiment_folder + "/" + f"{idx}_{idx_sample}{sign}.jpg")
+
+            counter += internal_batch_size
 
 
 class SignalDataset(torch.utils.data.Dataset):
@@ -353,10 +386,11 @@ class SignalDataset(torch.utils.data.Dataset):
 def compute_distance(A: torch.Tensor):
     """
     A: tensor of shape [N_r, N_s, N_r,  2]
+    
     """
     assert len(A.shape) == 4
 
-    A = A.mean(axis = 2)
+    A = A.mean(axis = 1)
 
     Beta = A[:, :,0] - A[:, :, 1]
     Beta = Beta / torch.diagonal(Beta)

@@ -289,56 +289,58 @@ class Dora:
             return custom_func
 
         counter = 0
-        while tqdm(counter < len(task_list), disable=not (progress), desc="Generating s-AMS"):
+        with tqdm(total=len(task_list), disable=not (progress), desc="Generating s-AMS") as pbar:
+            while counter < len(task_list):
 
-            internal_batch_size = min(batch_size, len(task_list) - counter)
-            batched_objective = BatchedObjective(
-                objectives=[make_custom_func(channel_number=idx,
-                                             maximisation=sign == '+') for idx, idx_sample, sign in task_list[counter:counter + internal_batch_size]]
-            )
+                internal_batch_size = min(batch_size, len(task_list) - counter)
+                batched_objective = BatchedObjective(
+                    objectives=[make_custom_func(channel_number=idx,
+                                                 maximisation=sign == '+') for idx, idx_sample, sign in task_list[counter:counter + internal_batch_size]]
+                )
 
-            # if overwrite_neurons == False and os.path.exists(filename) == True:
-            #     # print(
-            #     #     f"skippping neuron index:{idx}, sample {idx_sample}, sign {sign}  because it already exists here: {filename} with the same generation config"
-            #     # )
-            #     # image = Image.open(filename)
-            #
-            #     continue
-            # else:
-            #     # if sign == '+':
-            #     #     objective_fn.constant = 1
-            #     # elif sign == '-':
-            #     #     objective_fn.constant = -1
+                # if overwrite_neurons == False and os.path.exists(filename) == True:
+                #     # print(
+                #     #     f"skippping neuron index:{idx}, sample {idx_sample}, sign {sign}  because it already exists here: {filename} with the same generation config"
+                #     # )
+                #     # image = Image.open(filename)
+                #
+                #     continue
+                # else:
+                #     # if sign == '+':
+                #     #     objective_fn.constant = 1
+                #     # elif sign == '-':
+                #     #     objective_fn.constant = -1
 
-            ## set up a batch of trainable image parameters
-            bap = BatchedAutoImageParam(
-                batch_size=internal_batch_size,
-                width=width,
-                height=height,
-                standard_deviation=0.01
-            )
+                ## set up a batch of trainable image parameters
+                bap = BatchedAutoImageParam(
+                    batch_size=internal_batch_size,
+                    width=width,
+                    height=height,
+                    standard_deviation=0.01
+                )
 
-            image_param = local_dreamer.render(
-                image_parameter=bap,
-                layers=[layer],
-                width=width,
-                height=height,
-                iters=iters,
-                lr=lr,
-                rotate_degrees=rotate_degrees,
-                scale_max=scale_max,
-                scale_min=scale_min,
-                translate_x=translate_x,
-                translate_y=translate_y,
-                custom_func=batched_objective,
-                weight_decay=weight_decay,
-                grad_clip=grad_clip,
-            )
+                image_param = local_dreamer.render(
+                    image_parameter=bap,
+                    layers=[layer],
+                    width=width,
+                    height=height,
+                    iters=iters,
+                    lr=lr,
+                    rotate_degrees=rotate_degrees,
+                    scale_max=scale_max,
+                    scale_min=scale_min,
+                    translate_x=translate_x,
+                    translate_y=translate_y,
+                    custom_func=batched_objective,
+                    weight_decay=weight_decay,
+                    grad_clip=grad_clip,
+                )
 
-            for i, [idx, idx_sample, sign] in enumerate(task_list[counter:counter + internal_batch_size]):
-                image_param[i].save(experiment_folder + "/" + f"{idx}_{idx_sample}{sign}.jpg")
+                for i, [idx, idx_sample, sign] in enumerate(task_list[counter:counter + internal_batch_size]):
+                    image_param[i].save(experiment_folder + "/" + f"{idx}_{idx_sample}{sign}.jpg")
 
-            counter += internal_batch_size
+                counter += internal_batch_size
+                pbar.update(internal_batch_size)
 
 
 class SignalDataset(torch.utils.data.Dataset):

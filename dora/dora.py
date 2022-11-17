@@ -289,7 +289,7 @@ class Dora:
             return custom_func
 
         counter = 0
-        with tqdm(total=len(task_list), disable=not (progress), desc="Generating s-AMS") as pbar:
+        with tqdm(total=len(task_list), disable = not (progress), desc="Generating s-AMS") as pbar:
             while counter < len(task_list):
 
                 internal_batch_size = min(batch_size, len(task_list) - counter)
@@ -363,7 +363,7 @@ class SignalDataset(torch.utils.data.Dataset):
             # [neuron_id, sample_id, sign]
             self.metainfo[x] = [int(x[:-5].split('_')[0]),int(x[:-5].split('_')[1]), x[-5]]
 
-        assert self.N_r*self.N_s*2 == len(self.metainfo.keys())
+        #assert self.N_r*self.N_s*2 == len(self.metainfo.keys())
 
 
     def __len__(self):

@@ -283,7 +283,7 @@ class Dora:
             else:
                 constant = -1.
             def custom_func(layer_outputs):
-                loss = layer_outputs[layer_number][channel_number].norm()
+                loss = layer_outputs[layer_number][channel_number]
                 return -constant*loss
 
             return custom_func

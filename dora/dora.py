@@ -283,7 +283,7 @@ class Dora:
             else:
                 constant = -1.
             def custom_func(layer_outputs):
-                loss = layer_outputs[layer_number][channel_number]
+                loss = layer_outputs[layer_number][channel_number].mean()
                 return -constant*loss
 
             return custom_func
@@ -295,14 +295,14 @@ class Dora:
                 internal_batch_size = min(batch_size, len(task_list) - counter)
                 batched_objective = BatchedObjective(
                     objectives=[make_custom_func(channel_number=idx,
-                                                 maximisation=sign == '+') for idx, idx_sample, sign in task_list[counter:counter + internal_batch_size]]
+                                                 maximisation= sign == '+') for idx, idx_sample, sign in task_list[counter:counter + internal_batch_size]]
                 )
 
                 # if overwrite_neurons == False and os.path.exists(filename) == True:
-                #     # print(
-                #     #     f"skippping neuron index:{idx}, sample {idx_sample}, sign {sign}  because it already exists here: {filename} with the same generation config"
-                #     # )
-                #     # image = Image.open(filename)
+                #     print(
+                #         f"skippping neuron index:{idx}, sample {idx_sample}, sign {sign}  because it already exists here: {filename} with the same generation config"
+                #     )
+                #     image = Image.open(filename)
                 #
                 #     continue
                 # else:

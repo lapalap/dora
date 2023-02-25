@@ -170,7 +170,6 @@ class Dora:
         width=256,
         height=256,
         iters=150,
-        image_parameter = None,
         image_transforms = transforms.Compose([transforms.Pad(2, fill=.5, padding_mode='constant'),
                                            transforms.RandomAffine((-15,15),
                                                                    translate=(0, 0.1),
@@ -206,11 +205,6 @@ class Dora:
         local_dreamer = Dreamer(model=self.model, quiet=True, device=self.device)
         if image_transforms is not None:
             local_dreamer.set_custom_transforms(image_transforms)
-        if image_parameter is None:
-            image_parameter = AutoImageParam(height= height,
-                                               width = width,
-                                               device = self.device,
-                                               standard_deviation = 0.01)
         
         #TODO update batch procedure
         overwrite_neurons = self.check_and_write_config(
@@ -267,10 +261,12 @@ class Dora:
                 len(neuron_idx) > 0
             ), "Expected neuron_idx list to have a non zero length"
 
-        # if 'only maximization' we generate only Activation-Maximisation signal
+
         if only_maximization:
+            # generate only Activation-Maximisation signal
             signatures = ['+']
         else:
+            # generate both Activation-Maximisation and Activation-Minimisation signals
             signatures = ['+', '-']
             
             
@@ -297,19 +293,6 @@ class Dora:
                     objectives=[make_custom_func(channel_number=idx,
                                                  maximisation= sign == '+') for idx, idx_sample, sign in task_list[counter:counter + internal_batch_size]]
                 )
-
-                # if overwrite_neurons == False and os.path.exists(filename) == True:
-                #     print(
-                #         f"skippping neuron index:{idx}, sample {idx_sample}, sign {sign}  because it already exists here: {filename} with the same generation config"
-                #     )
-                #     image = Image.open(filename)
-                #
-                #     continue
-                # else:
-                #     # if sign == '+':
-                #     #     objective_fn.constant = 1
-                #     # elif sign == '-':
-                #     #     objective_fn.constant = -1
 
                 ## set up a batch of trainable image parameters
                 bap = BatchedAutoImageParam(
@@ -346,15 +329,15 @@ class Dora:
 class SignalDataset(torch.utils.data.Dataset):
     """Custom dataset class for loading the signals"""
 
-    def __init__(self, root_dir, N_r, N_s, transform=None):
+    def __init__(self, root_dir, k, n, only_maximization = True, transform=None):
         """
         #TODO fill this
         """
         self.root_dir = root_dir
         self.transform = transform
 
-        self.N_r = N_r
-        self.N_s = N_s
+        self.k = k
+        self.n = n
 
         self.metainfo = {}
 
@@ -362,9 +345,6 @@ class SignalDataset(torch.utils.data.Dataset):
             x = os.path.basename(x)
             # [neuron_id, sample_id, sign]
             self.metainfo[x] = [int(x[:-5].split('_')[0]),int(x[:-5].split('_')[1]), x[-5]]
-
-        #assert self.N_r*self.N_s*2 == len(self.metainfo.keys())
-
 
     def __len__(self):
         return len(self.metainfo.keys())
@@ -385,19 +365,46 @@ class SignalDataset(torch.utils.data.Dataset):
         return sample, self.metainfo[img_name]
 
 
-def compute_distance(A: torch.Tensor):
+def cosine_similarity(a: torch.Tensor, b: torch.Tensor, eps=1e-5):
     """
-    A: tensor of shape [N_r, N_s, N_r,  2]
-    
+    Computes cosine similarity between 2 matrices
     """
-    assert len(A.shape) == 4
+    a_n, b_n = a.norm(dim=1)[:, None], b.norm(dim=1)[:, None]
+    a_norm = a / torch.max(a_n, eps * torch.ones_like(a_n))
+    b_norm = b / torch.max(b_n, eps * torch.ones_like(b_n))
+    sim_mt = torch.mm(a_norm, b_norm.transpose(0, 1))
+    return sim_mt
 
-    A = A.mean(axis = 1)
 
-    Beta = A[:, :,0] - A[:, :, 1]
-    Beta = Beta / torch.diagonal(Beta)
+def EA_distance(A: torch.Tensor, layerwise: bool = True):
+    """
+    Funtion that computes EA distance
 
-    return Beta * torch.sqrt(Beta.T/Beta)
+    A: tensor of s-AMS activations of shape [k, k]
+    layerwise: a boolean value indicating the type of distance being computed. If True, the distance is computed layerwise; otherwise, the distance is computed in pairwise fashion.
+    """
+
+    assert len(A.shape) == 2
+
+    if layerwise:
+        D = torch.sqrt((1 - torch.clamp(cosine_similarity(A, A), min=-1, max=1)) / 2)
+    else:
+        size = A.shape[0]
+        D = torch.zeros([size, size])
+        for q in range(size):
+            for m in range(q, size):
+                a = A[q, [q, m]]
+                b = A[m, [q, m]]
+                cos = np.dot(a, b) / (np.norm(a) * np.norm(b))
+                D[q, m] = np.nan_to_num(np.sqrt((1 - np.clip(cos, a_min=-1, a_max=1)) / 2.))
+                D[m, q] = D[q, m]
+
+    #for stability
+    D = D - torch.diag(torch.diag(D))
+    # D = torch.nan_to_num(D)
+    # D = (D + D.T) / 2.
+
+    return D
 
 
 

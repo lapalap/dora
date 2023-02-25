@@ -33,7 +33,7 @@ Infected representations, found by DORA, can also be used as artifact detectors 
 With DORA user can investigate networks for presence of artifactual representations. As an example, DORA was able to found cluster of unintended (spurious) Chinese-character detector in representations from standard ImageNet trained networks.
 
 <div align="center">
-<img src="./assets/images/example.svg" height="550"/>
+<img src="./assets/images/example.png" height="550"/>
 </div>
 
 <div align="left">

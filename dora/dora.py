@@ -47,8 +47,6 @@ class Dora:
         self.device = device
         self.model = model
 
-        # TODO: add transforms
-
         if storage_dir[-1] == "/":
             storage_dir = storage_dir[:-1]
 
@@ -204,7 +202,6 @@ class Dora:
         if image_transforms is not None:
             local_dreamer.set_custom_transforms(image_transforms)
 
-        # TODO update batch procedure
         overwrite_neurons = self.check_and_write_config(
             experiment_name=experiment_name,
             only_maximization=str(only_maximization),

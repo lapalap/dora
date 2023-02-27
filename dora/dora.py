@@ -380,13 +380,15 @@ def EA_distance(A: torch.Tensor, layerwise: bool = True):
     if layerwise:
         D = torch.sqrt((1 - torch.clamp(cosine_similarity(A, A), min=-1, max=1)) / 2)
     else:
+        # not optimised for GPU
+        A = A.cpu()
         size = A.shape[0]
         D = torch.zeros([size, size])
         for q in range(size):
             for m in range(q, size):
                 a = A[q, [q, m]]
                 b = A[m, [q, m]]
-                cos = np.dot(a, b) / (np.norm(a) * np.norm(b))
+                cos = np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
                 D[q, m] = np.nan_to_num(np.sqrt((1 - np.clip(cos, a_min=-1, a_max=1)) / 2.))
                 D[m, q] = D[q, m]
 

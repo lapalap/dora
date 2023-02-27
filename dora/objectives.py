@@ -33,6 +33,7 @@ class ChannelObjective(Objective):
         loss = layer_outputs[self.layer_number][self.channel_number].mean()
         return -loss
 
+
 class ClassObjective(Objective):
     def __init__(self, layer_number=0, class_number=0) -> None:
         """Objective function builder for class optimizations.

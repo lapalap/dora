@@ -1,37 +1,35 @@
-import os
-import json
 import glob
-import torch
-import warnings
-import time
+import json
 import numpy as np
+import os
+import time
+import torch
 import torch.nn as nn
-from tqdm import tqdm
-from PIL import Image
-
-from torch_dreams.dreamer import Dreamer
-from torch_dreams.auto_image_param import BaseImageParam, AutoImageParam
-from torch_dreams.batched_objective import BatchedObjective
-from torch_dreams.batched_image_param import BatchedAutoImageParam
-
 import torchvision.transforms as transforms
+import warnings
+from PIL import Image
 from skimage import io, transform
-
+from torch_dreams.auto_image_param import BaseImageParam, AutoImageParam
+from torch_dreams.batched_image_param import BatchedAutoImageParam
+from torch_dreams.batched_objective import BatchedObjective
+from torch_dreams.dreamer import Dreamer
+from tqdm import tqdm
 from typing import Callable, Union
-from .objectives import ChannelObjective
-from .results import Result
+
 from .forward_hook import ForwardHook
+from .objectives import ChannelObjective
 from .outlier_detection import OutlierDetector
 from .reduction_methods import get_mean_along_last_2_dims
+from .results import Result
 from .visualizer import OutlierVisualizer
 
 
 class Dora:
     def __init__(
-        self,
-        model: nn.Module,
-        storage_dir=".dora/",
-        device="cpu",
+            self,
+            model: nn.Module,
+            storage_dir=".dora/",
+            device="cpu",
     ):
         """Handles all stuff dora related. Would require a storage_dir where it would store the synthetic Activatiion
         Maximization Signals (s-AMS) as images which would be fed into self.model to collect activations.
@@ -89,7 +87,7 @@ class Dora:
             for (k1, v1), (k2, v2) in zip(existing_config.items(), data.items()):
 
                 assert (
-                    k1 == k2
+                        k1 == k2
                 ), f"Expected keys in config to be the same, but got {k1} and {k1}"
 
                 if k1 != "neuron_idx":
@@ -105,24 +103,24 @@ class Dora:
         return overwrite_neurons
 
     def check_and_write_config(
-        self,
-        experiment_name,
-        only_maximization,
-        num_samples,
-        neuron_idx,
-        width,
-        height,
-        iters,
-        lr,
-        rotate_degrees,
-        scale_max,
-        scale_min,
-        translate_x,
-        translate_y,
-        weight_decay,
-        grad_clip,
+            self,
+            experiment_name,
+            only_maximization,
+            num_samples,
+            neuron_idx,
+            width,
+            height,
+            iters,
+            lr,
+            rotate_degrees,
+            scale_max,
+            scale_min,
+            translate_x,
+            translate_y,
+            weight_decay,
+            grad_clip,
     ):
-        #TODO add information about image_parameter and transformations
+        # TODO add information about image_parameter and transformations
         data = {
             "experiment_name": experiment_name,
             "only_maximization": only_maximization,
@@ -158,38 +156,38 @@ class Dora:
         return overwrite_neurons
 
     def generate_signals(
-        self,
-        experiment_name,
-        layer: nn.Module,
-        objective_fn: Callable,
-        progress: bool = True,
-        neuron_idx: Union[list, int] = None,
-        only_maximization: bool = True,
-        batch_size = 16,
-        num_samples=1,
-        width=256,
-        height=256,
-        iters=150,
-        image_transforms = transforms.Compose([transforms.Pad(2, fill=.5, padding_mode='constant'),
-                                           transforms.RandomAffine((-15,15),
-                                                                   translate=(0, 0.1),
-                                                                   scale=(0.85, 1.2),
-                                                                   shear=(-15,15),
-                                                                   fill=0.5),
-                                           transforms.RandomCrop((224, 224),
-                                                                 padding=None,
-                                                                 pad_if_needed=True,
-                                                                 fill=0,
-                                                                 padding_mode='constant')]),
-        lr=9e-3,
-        rotate_degrees=15,
-        scale_max=1.2,
-        scale_min=0.8,
-        translate_x=0.2,
-        translate_y=0.2,
-        weight_decay=1e-2,
-        grad_clip=1.0,
-        overwrite_experiment=False,
+            self,
+            experiment_name,
+            layer: nn.Module,
+            objective_fn: Callable,
+            progress: bool = True,
+            neuron_idx: Union[list, int] = None,
+            only_maximization: bool = True,
+            batch_size=16,
+            num_samples=1,
+            width=256,
+            height=256,
+            iters=150,
+            image_transforms=transforms.Compose([transforms.Pad(2, fill=.5, padding_mode='constant'),
+                                                 transforms.RandomAffine((-15, 15),
+                                                                         translate=(0, 0.1),
+                                                                         scale=(0.85, 1.2),
+                                                                         shear=(-15, 15),
+                                                                         fill=0.5),
+                                                 transforms.RandomCrop((224, 224),
+                                                                       padding=None,
+                                                                       pad_if_needed=True,
+                                                                       fill=0,
+                                                                       padding_mode='constant')]),
+            lr=9e-3,
+            rotate_degrees=15,
+            scale_max=1.2,
+            scale_min=0.8,
+            translate_x=0.2,
+            translate_y=0.2,
+            weight_decay=1e-2,
+            grad_clip=1.0,
+            overwrite_experiment=False,
     ):
         """Would generate s-AMS for each neuron inside self.layer based on the objective_fn.
 
@@ -205,11 +203,11 @@ class Dora:
         local_dreamer = Dreamer(model=self.model, quiet=True, device=self.device)
         if image_transforms is not None:
             local_dreamer.set_custom_transforms(image_transforms)
-        
-        #TODO update batch procedure
+
+        # TODO update batch procedure
         overwrite_neurons = self.check_and_write_config(
             experiment_name=experiment_name,
-            only_maximization = str(only_maximization),
+            only_maximization=str(only_maximization),
             num_samples=num_samples,
             neuron_idx=neuron_idx,
             width=width,
@@ -258,9 +256,8 @@ class Dora:
             neuron_idx = [neuron_idx]
         else:
             assert (
-                len(neuron_idx) > 0
+                    len(neuron_idx) > 0
             ), "Expected neuron_idx list to have a non zero length"
-
 
         if only_maximization:
             # generate only Activation-Maximisation signal
@@ -268,30 +265,32 @@ class Dora:
         else:
             # generate both Activation-Maximisation and Activation-Minimisation signals
             signatures = ['+', '-']
-            
-            
-        task_list = [[idx, idx_sample, sign] for idx in neuron_idx for idx_sample in range(num_samples) for sign in signatures ]
+
+        task_list = [[idx, idx_sample, sign] for idx in neuron_idx for idx_sample in range(num_samples) for sign in
+                     signatures]
 
         ## objective generator for each neuron
-        def make_custom_func(layer_number=0, channel_number=0, maximisation = True):
+        def make_custom_func(layer_number=0, channel_number=0, maximisation=True):
             if maximisation:
                 constant = 1.
             else:
                 constant = -1.
+
             def custom_func(layer_outputs):
                 loss = layer_outputs[layer_number][channel_number].mean()
-                return -constant*loss
+                return -constant * loss
 
             return custom_func
 
         counter = 0
-        with tqdm(total=len(task_list), disable = not (progress), desc="Generating s-AMS") as pbar:
+        with tqdm(total=len(task_list), disable=not (progress), desc="Generating s-AMS") as pbar:
             while counter < len(task_list):
 
                 internal_batch_size = min(batch_size, len(task_list) - counter)
                 batched_objective = BatchedObjective(
                     objectives=[make_custom_func(channel_number=idx,
-                                                 maximisation= sign == '+') for idx, idx_sample, sign in task_list[counter:counter + internal_batch_size]]
+                                                 maximisation=sign == '+') for idx, idx_sample, sign in
+                                task_list[counter:counter + internal_batch_size]]
                 )
 
                 ## set up a batch of trainable image parameters
@@ -329,7 +328,7 @@ class Dora:
 class SignalDataset(torch.utils.data.Dataset):
     """Custom dataset class for loading the signals"""
 
-    def __init__(self, root_dir, k, n, only_maximization = True, transform=None):
+    def __init__(self, root_dir, k, n, only_maximization=True, transform=None):
         """
         #TODO fill this
         """
@@ -344,7 +343,7 @@ class SignalDataset(torch.utils.data.Dataset):
         for x in glob.glob(f"{root_dir}/*.jpg"):
             x = os.path.basename(x)
             # [neuron_id, sample_id, sign]
-            self.metainfo[x] = [int(x[:-5].split('_')[0]),int(x[:-5].split('_')[1]), x[-5]]
+            self.metainfo[x] = [int(x[:-5].split('_')[0]), int(x[:-5].split('_')[1]), x[-5]]
 
     def __len__(self):
         return len(self.metainfo.keys())
@@ -399,15 +398,9 @@ def EA_distance(A: torch.Tensor, layerwise: bool = True):
                 D[q, m] = np.nan_to_num(np.sqrt((1 - np.clip(cos, a_min=-1, a_max=1)) / 2.))
                 D[m, q] = D[q, m]
 
-    #for stability
+    # for stability
     D = D - torch.diag(torch.diag(D))
     # D = torch.nan_to_num(D)
     # D = (D + D.T) / 2.
 
     return D
-
-
-
-
-
-

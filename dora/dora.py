@@ -394,7 +394,7 @@ def EA_distance(A: torch.Tensor, layerwise: bool = True):
 
     # for stability
     D = D - torch.diag(torch.diag(D))
-    # D = torch.nan_to_num(D)
-    # D = (D + D.T) / 2.
+    D = torch.nan_to_num(D)
+    D = (D + D.T) / 2.
 
     return D

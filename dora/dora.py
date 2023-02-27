@@ -16,12 +16,7 @@ from torch_dreams.dreamer import Dreamer
 from tqdm import tqdm
 from typing import Callable, Union
 
-from .forward_hook import ForwardHook
 from .objectives import ChannelObjective
-from .outlier_detection import OutlierDetector
-from .reduction_methods import get_mean_along_last_2_dims
-from .results import Result
-from .visualizer import OutlierVisualizer
 
 
 class Dora:

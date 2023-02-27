@@ -4,7 +4,6 @@ import torchvision.transforms as transforms
 
 from dora import Dora
 from dora.objectives import ChannelObjective
-from torch_dreams.auto_image_param import BaseImageParam
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 neuron_indices = [i for i in range(5, 6)]
@@ -16,7 +15,6 @@ d.generate_signals(
     neuron_idx=neuron_indices,
     num_samples = 1,
     layer=model.fc,
-    image_parameter = None,
     batch_size = 2,
     image_transforms = transforms.Compose([transforms.Pad(2, fill=.5, padding_mode='constant'),
                                            transforms.RandomAffine((-15,15),
@@ -40,8 +38,8 @@ d.generate_signals(
 from dora import SignalDataset
 
 data = SignalDataset('/Users/kirillbykov/Documents/GitHub/dora/.dora/sAMS/model.fc',
-                     N_r = 2,
-                     N_s = 5,
+                     k = 2,
+                     n = 5,
                      transform = transforms.Compose([transforms.ToTensor(),
                                                      transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                                                           std=[0.229, 0.224, 0.225])])

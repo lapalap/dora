@@ -1,2 +1,2 @@
-from .dora import Dora, SignalDataset, compute_distance
+from .dora import Dora, SignalDataset, EA_distance
 from .utils import AdvBaseImageParam

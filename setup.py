@@ -9,8 +9,6 @@ with open("requirements.txt") as f:
 setuptools.setup(
     name="dora",
     version="0.0.0",
-    author="Mayukh Deb, Kiril Bykov",
-    author_email="mayukhmainak2000@gmail.com, kirill079@gmail.com",
     description="Data-agnOstic Representation Analysis of Deep Neural Networks",
     long_description=long_description,
     long_description_content_type="text/markdown",

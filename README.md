@@ -91,28 +91,7 @@ d.generate_signals(
     experiment_name="model.avgpool",
     overwrite_experiment=True,  ## will still use what already exists if generation params are same
 )
-
-d.collect_encodings(layer=model.avgpool, experiment_name="model.avgpool")
 ```
-
-Next, we can run outlier detection on our collected encodings:
-
-```python
-result = d.run_outlier_detection(
-    experiment_name="model.avgpool",
-    neuron_idx=neuron_indices,
-    method="PCA",
-    outliers_fraction=0.1,
-)
-```
-
-Now let's visualize our results on an interactive app :eyes:
-```python
-## runs an interactive dash app on http://127.0.0.1:8050/
-## set notebook_mode = True for notebooks
-result.visualize()
-```
-
 
 
 <div align="left">

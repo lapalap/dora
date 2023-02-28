@@ -43,17 +43,3 @@ def test_functionality():
         experiment_name="model.avgpool",
         overwrite_experiment=True,  ## pick up from where you left off
     )
-
-    d.collect_encodings(
-        layer=model.avgpool,
-        experiment_name="model.avgpool",
-    )
-
-    result = d.run_outlier_detection(
-        experiment_name="model.avgpool", neuron_idx=[i for i in range(30)], method="PCA"
-    )
-
-    # print("embeddings shape", result.embeddings.shape)  ## shape:[*, 2]
-    # print(
-    #     "outlier indices", result.outlier_neuron_idx
-    # )  ## list of neuron indices which were outliers
